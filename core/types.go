@@ -1,10 +1,10 @@
-package routes
+package core
 
-type newShortFormValues struct {
+type CreateShort struct {
 	TargetURL string `form:"target-url" json:"targetUrl"`
 }
 
-type createdShort struct {
+type Short struct {
 	TargetURL string `json:"targetUrl"`
 	ShortID   string `json:"shortId"`
 }

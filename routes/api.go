@@ -8,7 +8,7 @@ import (
 )
 
 func PostApiNew(c *gin.Context) {
-	var formValues newShortFormValues
+	var formValues core.CreateShort
 	if err := c.ShouldBindJSON(&formValues); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
 			"detail": "missing required field(s)",
@@ -19,7 +19,7 @@ func PostApiNew(c *gin.Context) {
 	core.FakeShortsDB[shortID] = formValues.TargetURL
 	c.JSON(
 		http.StatusOK,
-		createdShort{
+		core.Short{
 			TargetURL: formValues.TargetURL,
 			ShortID:   shortID,
 		})
@@ -35,7 +35,7 @@ func GetApiInfo(c *gin.Context) {
 	} else {
 		c.JSON(
 			http.StatusOK,
-			createdShort{
+			core.Short{
 				ShortID:   shortID,
 				TargetURL: targetURL,
 			})

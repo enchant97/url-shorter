@@ -17,7 +17,7 @@ func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
 	if shortID != "" {
 		targetURL := core.FakeShortsDB[shortID]
-		short := createdShort{
+		short := core.Short{
 			ShortID:   shortID,
 			TargetURL: targetURL,
 		}
@@ -39,7 +39,7 @@ func GetNew(c *gin.Context) {
 }
 
 func PostNew(c *gin.Context) {
-	var formValues newShortFormValues
+	var formValues core.CreateShort
 	if err := c.ShouldBind(&formValues); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
