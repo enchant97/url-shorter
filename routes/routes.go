@@ -1,7 +1,7 @@
 package routes
 
 type newShortFormValues struct {
-	TargetUrl string `form:"target-url" json:"targetUrl"`
+	TargetURL string `form:"target-url" json:"targetUrl"`
 }
 
 type createdShort struct {

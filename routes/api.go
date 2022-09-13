@@ -17,11 +17,11 @@ func PostApiNew(c *gin.Context) {
 		return
 	}
 	shortID := randstr.String(8)
-	core.FakeShortsDB[shortID] = formValues.TargetUrl
+	core.FakeShortsDB[shortID] = formValues.TargetURL
 	c.JSON(
 		http.StatusOK,
 		createdShort{
-			TargetURL: formValues.TargetUrl,
+			TargetURL: formValues.TargetURL,
 			ShortID:   shortID,
 		})
 }

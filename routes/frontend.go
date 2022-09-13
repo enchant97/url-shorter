@@ -26,31 +26,33 @@ func PostNew(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	shortId := randstr.String(8)
-	core.FakeShortsDB[shortId] = formValues.TargetUrl
-	c.Redirect(http.StatusSeeOther, "/"+shortId+"/info")
+	shortID := randstr.String(8)
+	core.FakeShortsDB[shortID] = formValues.TargetURL
+	c.Redirect(http.StatusSeeOther, "/"+shortID+"/info")
 }
 
 func GetRedirect(c *gin.Context) {
-	shortId := c.Param("short_id")
-	targetUrl := core.FakeShortsDB[shortId]
-	if targetUrl == "" {
+	shortID := c.Param("shortID")
+	targetURL := core.FakeShortsDB[shortID]
+	if targetURL == "" {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, targetUrl)
+		c.Redirect(http.StatusTemporaryRedirect, targetURL)
 	}
 }
 
 func GetShortInfo(c *gin.Context) {
-	shortId := c.Param("short_id")
-	targetUrl := core.FakeShortsDB[shortId]
-	if targetUrl == "" {
+	shortID := c.Param("shortID")
+	targetURL := core.FakeShortsDB[shortID]
+	if targetURL == "" {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		c.HTML(http.StatusOK, "short_info.html", gin.H{
 			"pageTitle": "Short Info",
-			"shortId":   shortId,
-			"targetUrl": targetUrl,
+			"short": createdShort{
+				ShortID:   shortID,
+				TargetURL: targetURL,
+			},
 		})
 	}
 }
