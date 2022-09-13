@@ -41,7 +41,10 @@ func main() {
 	r.POST("/new", routes.PostNew)
 	r.GET("/:shortID", routes.GetRedirect)
 	r.GET("/:shortID/info", routes.GetShortInfo)
-	r.POST("/api/short", routes.PostApiNew)
-	r.GET("/api/short/:shortID", routes.GetApiInfo)
+	apiRoutes := r.Group("/api")
+	{
+		apiRoutes.POST("/short", routes.PostApiNew)
+		apiRoutes.GET("/short/:shortID", routes.GetApiInfo)
+	}
 	r.Run("localhost:8080")
 }
