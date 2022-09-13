@@ -5,7 +5,6 @@ import (
 
 	"github.com/enchant97/url-shorter/core"
 	"github.com/gin-gonic/gin"
-	"github.com/thanhpk/randstr"
 )
 
 func PostApiNew(c *gin.Context) {
@@ -16,7 +15,7 @@ func PostApiNew(c *gin.Context) {
 		})
 		return
 	}
-	shortID := randstr.String(8)
+	shortID := core.MakeShortID()
 	core.FakeShortsDB[shortID] = formValues.TargetURL
 	c.JSON(
 		http.StatusOK,

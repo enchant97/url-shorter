@@ -5,7 +5,6 @@ import (
 
 	"github.com/enchant97/url-shorter/core"
 	"github.com/gin-gonic/gin"
-	"github.com/thanhpk/randstr"
 )
 
 func GetIndex(c *gin.Context) {
@@ -26,7 +25,7 @@ func PostNew(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	shortID := randstr.String(8)
+	shortID := core.MakeShortID()
 	core.FakeShortsDB[shortID] = formValues.TargetURL
 	c.Redirect(http.StatusSeeOther, "/"+shortID+"/info")
 }
