@@ -13,6 +13,25 @@ func GetIndex(c *gin.Context) {
 	})
 }
 
+func GetChecker(c *gin.Context) {
+	shortID := c.Query("short-id")
+	if shortID != "" {
+		targetURL := core.FakeShortsDB[shortID]
+		short := createdShort{
+			ShortID:   shortID,
+			TargetURL: targetURL,
+		}
+		c.HTML(http.StatusOK, "checker.html", gin.H{
+			"pageTitle": "Checker",
+			"short":     short,
+		})
+		return
+	}
+	c.HTML(http.StatusOK, "checker.html", gin.H{
+		"pageTitle": "Checker",
+	})
+}
+
 func GetNew(c *gin.Context) {
 	c.HTML(http.StatusOK, "new.html", gin.H{
 		"pageTitle": "New",
@@ -37,21 +56,5 @@ func GetRedirect(c *gin.Context) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		c.Redirect(http.StatusTemporaryRedirect, targetURL)
-	}
-}
-
-func GetShortInfo(c *gin.Context) {
-	shortID := c.Param("shortID")
-	targetURL := core.FakeShortsDB[shortID]
-	if targetURL == "" {
-		c.AbortWithStatus(http.StatusNotFound)
-	} else {
-		c.HTML(http.StatusOK, "short_info.html", gin.H{
-			"pageTitle": "Short Info",
-			"short": createdShort{
-				ShortID:   shortID,
-				TargetURL: targetURL,
-			},
-		})
 	}
 }

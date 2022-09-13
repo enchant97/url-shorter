@@ -1,0 +1,17 @@
+{{define "content"}}
+<p>Use to ensure a short link goes where you expect.</p>
+<form action="/checker" method="get">
+    <label for="short-id">Short ID</label>
+    <input type="text" name="short-id" id="short-id" required>
+    <button type="submit">Check</button>
+</form>
+{{if .short}}
+<div>
+    <p>{{ .short.ShortID }}</p>
+    <p>{{ .short.TargetURL }}</p>
+    {{ if .short.TargetURL }}
+    <a href="{{ .short.TargetURL }}">Go</a>
+    {{end}}
+</div>
+{{end}}
+{{end}}

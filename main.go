@@ -37,10 +37,10 @@ func main() {
 	r.HTMLRender = loadTemplates("./templates")
 	r.Static("/static", "./static")
 	r.GET("/", routes.GetIndex)
+	r.GET("/checker", routes.GetChecker)
 	r.GET("/new", routes.GetNew)
 	r.POST("/new", routes.PostNew)
 	r.GET("/:shortID", routes.GetRedirect)
-	r.GET("/:shortID/info", routes.GetShortInfo)
 	apiRoutes := r.Group("/api")
 	{
 		apiRoutes.POST("/short", routes.PostApiNew)
