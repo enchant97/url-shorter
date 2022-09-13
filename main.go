@@ -41,5 +41,7 @@ func main() {
 	r.POST("/new", routes.PostNew)
 	r.GET("/:short_id", routes.GetRedirect)
 	r.GET("/:short_id/info", routes.GetShortInfo)
+	r.POST("/api/short", routes.PostApiNew)
+	r.GET("/api/short/:shortID", routes.GetApiInfo)
 	r.Run("localhost:8080")
 }

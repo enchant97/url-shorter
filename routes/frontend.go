@@ -20,14 +20,10 @@ func GetNew(c *gin.Context) {
 	})
 }
 
-type newShortFormValues struct {
-	TargetUrl string `form:"target-url"`
-}
-
 func PostNew(c *gin.Context) {
 	var formValues newShortFormValues
 	if err := c.ShouldBind(&formValues); err != nil {
-		c.AbortWithStatus(http.StatusUnprocessableEntity)
+		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
 	shortId := randstr.String(8)
