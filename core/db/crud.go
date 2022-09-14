@@ -1,9 +1,11 @@
 package db
 
-func CreateNewShort(shortID string, targetURL string) Short {
-	shortRow := Short{ShortID: shortID, TargetURL: targetURL}
-	DB.Create(&shortRow)
-	return shortRow
+import "github.com/enchant97/url-shorter/core"
+
+func CreateNewShort(short core.Short) (Short, error) {
+	shortRow := Short{ShortID: short.ShortID, TargetURL: short.TargetURL}
+	db := DB.Create(&shortRow)
+	return shortRow, db.Error
 }
 
 func GetShortByShortID(shortID string) Short {

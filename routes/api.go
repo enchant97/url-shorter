@@ -16,14 +16,14 @@ func PostApiNew(c *gin.Context) {
 		})
 		return
 	}
-	shortID := core.MakeShortID()
-	db.CreateNewShort(shortID, formValues.TargetURL)
-	c.JSON(
-		http.StatusOK,
-		core.Short{
-			TargetURL: formValues.TargetURL,
-			ShortID:   shortID,
+	short := formValues.GenerateShort()
+	if _, err := db.CreateNewShort(short); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"detail": "unable to create short",
 		})
+		return
+	}
+	c.JSON(http.StatusOK, short)
 }
 
 func GetApiInfo(c *gin.Context) {
@@ -36,9 +36,7 @@ func GetApiInfo(c *gin.Context) {
 	} else {
 		c.JSON(
 			http.StatusOK,
-			core.Short{
-				ShortID:   shortID,
-				TargetURL: shortRow.TargetURL,
-			})
+			shortRow.IntoCoreShort(),
+		)
 	}
 }

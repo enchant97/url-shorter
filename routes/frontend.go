@@ -41,9 +41,12 @@ func PostNew(c *gin.Context) {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
-	shortID := core.MakeShortID()
-	db.CreateNewShort(shortID, formValues.TargetURL)
-	c.Redirect(http.StatusSeeOther, "/checker?short-id="+shortID+"")
+	short := formValues.GenerateShort()
+	if _, err := db.CreateNewShort(short); err != nil {
+		c.AbortWithError(http.StatusInternalServerError, err)
+		return
+	}
+	c.Redirect(http.StatusSeeOther, "/checker?short-id="+short.ShortID)
 }
 
 func GetRedirect(c *gin.Context) {
