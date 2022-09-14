@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/enchant97/url-shorter/core"
+	"github.com/enchant97/url-shorter/core/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,14 +17,10 @@ func GetIndex(c *gin.Context) {
 func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
 	if shortID != "" {
-		targetURL := core.FakeShortsDB[shortID]
-		short := core.Short{
-			ShortID:   shortID,
-			TargetURL: targetURL,
-		}
+		shortRow := db.GetShortByShortID(shortID)
 		c.HTML(http.StatusOK, "checker.html", gin.H{
 			"pageTitle": "Checker",
-			"short":     short,
+			"short":     shortRow,
 		})
 		return
 	}
@@ -45,16 +42,16 @@ func PostNew(c *gin.Context) {
 		return
 	}
 	shortID := core.MakeShortID()
-	core.FakeShortsDB[shortID] = formValues.TargetURL
-	c.Redirect(http.StatusSeeOther, "/"+shortID+"/info")
+	db.CreateNewShort(shortID, formValues.TargetURL)
+	c.Redirect(http.StatusSeeOther, "/checker?short-id="+shortID+"")
 }
 
 func GetRedirect(c *gin.Context) {
 	shortID := c.Param("shortID")
-	targetURL := core.FakeShortsDB[shortID]
-	if targetURL == "" {
+	shortRow := db.GetShortByShortID(shortID)
+	if shortRow == (db.Short{}) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, targetURL)
+		c.Redirect(http.StatusTemporaryRedirect, shortRow.TargetURL)
 	}
 }

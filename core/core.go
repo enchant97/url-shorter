@@ -2,9 +2,6 @@ package core
 
 import "github.com/thanhpk/randstr"
 
-// until real database is implemented
-var FakeShortsDB = map[string]string{}
-
 // How many characters long the short id will be
 const ShortIDLength = 8
 

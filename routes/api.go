@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/enchant97/url-shorter/core"
+	"github.com/enchant97/url-shorter/core/db"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +17,7 @@ func PostApiNew(c *gin.Context) {
 		return
 	}
 	shortID := core.MakeShortID()
-	core.FakeShortsDB[shortID] = formValues.TargetURL
+	db.CreateNewShort(shortID, formValues.TargetURL)
 	c.JSON(
 		http.StatusOK,
 		core.Short{
@@ -27,8 +28,8 @@ func PostApiNew(c *gin.Context) {
 
 func GetApiInfo(c *gin.Context) {
 	shortID := c.Param("shortID")
-	targetURL := core.FakeShortsDB[shortID]
-	if targetURL == "" {
+	shortRow := db.GetShortByShortID(shortID)
+	if shortRow == (db.Short{}) {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"detail": "short id not found",
 		})
@@ -37,7 +38,7 @@ func GetApiInfo(c *gin.Context) {
 			http.StatusOK,
 			core.Short{
 				ShortID:   shortID,
-				TargetURL: targetURL,
+				TargetURL: shortRow.TargetURL,
 			})
 	}
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"path/filepath"
 
+	"github.com/enchant97/url-shorter/core/db"
 	"github.com/enchant97/url-shorter/routes"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -34,6 +35,9 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 
 func main() {
 	r := gin.Default()
+
+	db.InitDB()
+
 	r.HTMLRender = loadTemplates("./templates")
 	r.Static("/static", "./static")
 	r.GET("/", routes.GetIndex)
