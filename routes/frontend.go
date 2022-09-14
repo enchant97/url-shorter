@@ -52,7 +52,7 @@ func GetRedirect(c *gin.Context) {
 	if shortRow == (db.Short{}) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		db.ShortVisitCountIncr(shortID)
+		shortRow.IncrVisitCount()
 		c.Redirect(http.StatusTemporaryRedirect, shortRow.TargetURL)
 	}
 }

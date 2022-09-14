@@ -14,12 +14,8 @@ func GetShortByShortID(shortID string) Short {
 	return shortRow
 }
 
-func ShortVisitCountIncr(shortID string) int {
-	var shortRow Short
-	if err := DB.Where("short_id = ?", shortID).First(&shortRow).Error; err == nil {
-		shortRow.VisitCount++
-		DB.Save(&shortRow)
-		return shortRow.VisitCount
-	}
-	return -1
+func (s *Short) IncrVisitCount() int {
+	s.VisitCount++
+	DB.Save(&s)
+	return s.VisitCount
 }
