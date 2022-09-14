@@ -10,7 +10,7 @@
     <p>{{ .short.ShortID }}</p>
     <p>{{ .short.TargetURL }}</p>
     {{ if .short.TargetURL }}
-    <a href="{{ .short.TargetURL }}">Go</a>
+    <a href="/{{ .short.ShortID }}">Go</a>
     {{end}}
 </div>
 {{end}}
