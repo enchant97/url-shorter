@@ -40,15 +40,6 @@ func main() {
 
 	r.HTMLRender = loadTemplates("./templates")
 	r.Static("/static", "./static")
-	r.GET("/", routes.GetIndex)
-	r.GET("/checker", routes.GetChecker)
-	r.GET("/new", routes.GetNew)
-	r.POST("/new", routes.PostNew)
-	r.GET("/:shortID", routes.GetRedirect)
-	apiRoutes := r.Group("/api")
-	{
-		apiRoutes.POST("/short", routes.PostApiNew)
-		apiRoutes.GET("/short/:shortID", routes.GetApiInfo)
-	}
+	routes.InitRoutes(r)
 	r.Run("localhost:8080")
 }
