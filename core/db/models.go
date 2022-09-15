@@ -1,20 +1,21 @@
 package db
 
 import (
-	"github.com/enchant97/url-shorter/core"
+	"time"
+
 	"gorm.io/gorm"
 )
 
-type Short struct {
-	gorm.Model
-	ShortID    string `gorm:"unique"`
-	TargetURL  string
-	VisitCount int `gorm:"default:0"`
+type BaseModel struct {
+	ID        uint           `gorm:"primarykey" json:"id"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"-"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
 }
 
-func (s *Short) IntoCoreShort() core.Short {
-	return core.Short{
-		ShortID:   s.ShortID,
-		TargetURL: s.TargetURL,
-	}
+type Short struct {
+	BaseModel
+	ShortID    string `gorm:"unique;not null" json:"shortId"`
+	TargetURL  string `gorm:"not null" json:"targetUrl"`
+	VisitCount int    `gorm:"default:0;not null" json:"visitCount"`
 }

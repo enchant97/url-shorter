@@ -36,7 +36,7 @@ func GetApiInfo(c *gin.Context) {
 	} else {
 		c.JSON(
 			http.StatusOK,
-			shortRow.IntoCoreShort(),
+			shortRow,
 		)
 	}
 }
