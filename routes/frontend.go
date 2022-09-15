@@ -55,8 +55,13 @@ func GetRedirect(c *gin.Context) {
 	if shortRow == (db.Short{}) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		// execute update in goroutine, as client doesn't need to wait for this
-		defer func() { go func() { shortRow.IncrVisitCount() }() }()
-		c.Redirect(http.StatusTemporaryRedirect, shortRow.TargetURL)
+		if shortRow.IsExpired() {
+			defer func() { go func() { db.DB.Delete(&shortRow) }() }()
+			c.AbortWithStatus(http.StatusNotFound)
+		} else {
+			// execute update in goroutine, as client doesn't need to wait for this
+			defer func() { go func() { shortRow.IncrVisitCount() }() }()
+			c.Redirect(http.StatusTemporaryRedirect, shortRow.TargetURL)
+		}
 	}
 }
