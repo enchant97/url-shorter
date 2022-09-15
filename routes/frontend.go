@@ -42,7 +42,7 @@ func PostNew(c *gin.Context) {
 		return
 	}
 	short := formValues.GenerateShort()
-	if _, err := db.CreateNewShort(short); err != nil {
+	if err := short.Create(); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}

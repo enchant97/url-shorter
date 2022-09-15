@@ -17,7 +17,7 @@ func PostApiNew(c *gin.Context) {
 		return
 	}
 	short := formValues.GenerateShort()
-	if _, err := db.CreateNewShort(short); err != nil {
+	if err := short.Create(); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": "unable to create short",
 		})
