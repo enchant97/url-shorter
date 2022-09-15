@@ -24,13 +24,22 @@ func NullableIsoStringToTime(input *string) (*time.Time, error) {
 }
 
 func (s *CreateShort) GenerateShort() db.Short {
+	// Put expire time in correct format
 	expiresAt, err := NullableIsoStringToTime(s.ExpiresAt)
 	if err != nil {
 		panic("time parse error")
+	}
+	// Ensure max use lower than 1 is represented as nil
+	var maxUses *uint
+	if s.MaxUses != nil && *s.MaxUses < 1 {
+		maxUses = nil
+	} else {
+		maxUses = s.MaxUses
 	}
 	return db.Short{
 		TargetURL: s.TargetURL,
 		ShortID:   MakeShortID(),
 		ExpiresAt: expiresAt,
+		UsesLeft:  maxUses,
 	}
 }

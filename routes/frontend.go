@@ -55,7 +55,7 @@ func GetRedirect(c *gin.Context) {
 	if shortRow == (db.Short{}) {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
-		if shortRow.IsExpired() {
+		if shortRow.IsExpired() || !shortRow.IsUsable() {
 			defer func() { go func() { db.DB.Delete(&shortRow) }() }()
 			c.AbortWithStatus(http.StatusNotFound)
 		} else {

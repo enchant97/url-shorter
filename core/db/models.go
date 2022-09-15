@@ -19,11 +19,21 @@ type Short struct {
 	TargetURL  string     `gorm:"not null" json:"targetUrl"`
 	VisitCount int        `gorm:"default:0;not null" json:"visitCount,omitempty"`
 	ExpiresAt  *time.Time `json:"expiresAt,omitempty"`
+	UsesLeft   *uint      `json:"usesLeft,omitempty"`
 }
 
+// Whether the short expiry has elapsed
 func (s *Short) IsExpired() bool {
 	if s.ExpiresAt == nil {
 		return false
 	}
 	return s.ExpiresAt.Before(time.Now())
+}
+
+// Whether the short can be used (a redirect)
+func (s *Short) IsUsable() bool {
+	if s.UsesLeft == nil {
+		return true
+	}
+	return *s.UsesLeft > 0
 }
