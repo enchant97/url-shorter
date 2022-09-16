@@ -11,6 +11,11 @@ func InitRoutes(r *gin.Engine) {
 		frontendRoutes.POST("/new", PostNew)
 		frontendRoutes.GET("/:shortID", GetRedirect)
 	}
+	userRoutes := r.Group("/users")
+	{
+		userRoutes.GET("/new", GetNewUser)
+		userRoutes.POST("/new", PostNewUser)
+	}
 	apiRoutes := r.Group("/api")
 	{
 		apiRoutes.POST("/short", PostApiNew)
