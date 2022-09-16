@@ -1,11 +1,11 @@
 package db
 
-func GetShortByShortID(shortID string) Short {
+func GetShortByShortID(shortID string) *Short {
 	var shortRow Short
 	if err := DB.Where("short_id = ?", shortID).First(&shortRow).Error; err != nil {
-		return Short{}
+		return nil
 	}
-	return shortRow
+	return &shortRow
 }
 
 func (s *Short) Create() error {

@@ -52,7 +52,7 @@ func PostNew(c *gin.Context) {
 func GetRedirect(c *gin.Context) {
 	shortID := c.Param("shortID")
 	shortRow := db.GetShortByShortID(shortID)
-	if shortRow == (db.Short{}) {
+	if shortRow == nil {
 		c.AbortWithStatus(http.StatusNotFound)
 	} else {
 		if shortRow.IsExpired() || !shortRow.IsUsable() {
