@@ -1,8 +1,8 @@
 package core
 
 type CreateShort struct {
-	TargetURL string  `form:"target-url" json:"targetUrl"`
-	ExpiresAt *string `form:"expires-at" json:"expiresAt" binding:"datetime"`
+	TargetURL string  `form:"target-url" json:"targetUrl" binding:"required"`
+	ExpiresAt *string `form:"expires-at" json:"expiresAt"`
 	MaxUses   *uint   `form:"max-uses" json:"maxUses"`
 }
 
