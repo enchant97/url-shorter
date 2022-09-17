@@ -3,6 +3,7 @@ module github.com/enchant97/url-shorter
 go 1.19
 
 require (
+	github.com/caarlos0/env/v6 v6.10.1
 	github.com/gin-contrib/multitemplate v0.0.0-20220829131020-8c2a8441bc2b
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.8.1

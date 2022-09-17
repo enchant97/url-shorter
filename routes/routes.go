@@ -6,9 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func InitRoutes(r *gin.Engine) {
-	// FIXME get app secret from app config
-	store := cookie.NewStore([]byte("app-secret"))
+func InitRoutes(r *gin.Engine, secretKey []byte) {
+	store := cookie.NewStore(secretKey)
 	session := sessions.Sessions("APP-SESSION", store)
 
 	r.GET("/:shortID", GetRedirect)
