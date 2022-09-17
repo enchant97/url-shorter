@@ -4,8 +4,6 @@ import (
 	"time"
 
 	"github.com/enchant97/url-shorter/core/db"
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
 	"github.com/thanhpk/randstr"
 )
 
@@ -44,35 +42,4 @@ func (s *CreateShort) GenerateShort() db.Short {
 		ExpiresAt: expiresAt,
 		UsesLeft:  maxUses,
 	}
-}
-
-func GetAuthenticatedUserID(c *gin.Context) *uint {
-	session := sessions.Default(c)
-	if userID := session.Get("authenticatedUserID"); userID != nil {
-		if userID, isValid := userID.(uint); isValid {
-			return &userID
-		}
-	}
-	return nil
-}
-
-func GetAuthenticatedUser(c *gin.Context) *db.User {
-	if userID := GetAuthenticatedUserID(c); userID != nil {
-		if userRow := db.GetUserByID(*userID); userRow != nil {
-			return userRow
-		}
-	}
-	return nil
-}
-
-func SetAuthenticatedUserID(c *gin.Context, userID uint) error {
-	session := sessions.Default(c)
-	session.Set("authenticatedUserID", userID)
-	return session.Save()
-}
-
-func RemoveAuthenticatedUser(c *gin.Context) error {
-	session := sessions.Default(c)
-	session.Clear()
-	return session.Save()
 }

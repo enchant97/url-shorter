@@ -3,13 +3,15 @@ package routes
 import (
 	"net/http"
 
+	"github.com/enchant97/go-gincookieauth"
+	"github.com/enchant97/go-gincookieauth/extras"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
 	"github.com/gin-gonic/gin"
 )
 
 func GetNewUser(c *gin.Context) {
-	c.HTML(http.StatusOK, "new-user.html", gin.H{
+	extras.TemplateWithAuth(c, http.StatusOK, "new-user.html", gin.H{
 		"pageTitle": "New User",
 	})
 }
@@ -32,12 +34,12 @@ func PostNewUser(c *gin.Context) {
 }
 
 func GetLoginUser(c *gin.Context) {
-	if core.GetAuthenticatedUserID(c) != nil {
+	if gincookieauth.GetUserID(c) != nil {
 		// user already logged in
 		c.Redirect(http.StatusTemporaryRedirect, "/")
 		return
 	}
-	c.HTML(http.StatusOK, "login-user.html", gin.H{
+	extras.TemplateWithAuth(c, http.StatusOK, "login-user.html", gin.H{
 		"pageTitle": "Login",
 	})
 }
@@ -50,7 +52,7 @@ func PostLoginUser(c *gin.Context) {
 	}
 	if user := db.GetUserByUsername(userLogin.Username); user != nil {
 		if user.IsPasswordMatch(userLogin.Password) {
-			core.SetAuthenticatedUserID(c, user.ID)
+			gincookieauth.LoginUser(c, user.ID)
 			c.Redirect(http.StatusSeeOther, "/")
 			return
 		}
@@ -59,6 +61,6 @@ func PostLoginUser(c *gin.Context) {
 }
 
 func GetLogoutUser(c *gin.Context) {
-	core.RemoveAuthenticatedUser(c)
+	gincookieauth.LogoutUser(c, true)
 	c.Redirect(http.StatusTemporaryRedirect, "/")
 }

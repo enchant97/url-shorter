@@ -1,20 +1,23 @@
 package routes
 
 import (
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
+	"github.com/enchant97/go-gincookieauth"
+	"github.com/enchant97/go-gincookieauth/extras"
 	"github.com/gin-gonic/gin"
 )
 
 func InitRoutes(r *gin.Engine, secretKey []byte) {
-	store := cookie.NewStore(secretKey)
-	session := sessions.Sessions("APP-SESSION", store)
+	session := extras.MakeSession("AUTH", secretKey)
+	cookieAuth := gincookieauth.CookieAuth(gincookieauth.CookieAuthConfig{
+		AuthRequired: false,
+	})
 
 	r.GET("/:shortID", GetRedirect)
 
 	frontendRoutes := r.Group("/")
 	{
 		frontendRoutes.Use(session)
+		frontendRoutes.Use(cookieAuth)
 		frontendRoutes.GET("/", GetIndex)
 		frontendRoutes.GET("/checker", GetChecker)
 		frontendRoutes.GET("/new", GetNew)
@@ -23,6 +26,7 @@ func InitRoutes(r *gin.Engine, secretKey []byte) {
 	userRoutes := r.Group("/users")
 	{
 		userRoutes.Use(session)
+		userRoutes.Use(cookieAuth)
 		userRoutes.GET("/new", GetNewUser)
 		userRoutes.POST("/new", PostNewUser)
 		userRoutes.GET("/login", GetLoginUser)

@@ -3,13 +3,15 @@ package routes
 import (
 	"net/http"
 
+	"github.com/enchant97/go-gincookieauth"
+	"github.com/enchant97/go-gincookieauth/extras"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
 	"github.com/gin-gonic/gin"
 )
 
 func GetIndex(c *gin.Context) {
-	c.HTML(http.StatusOK, "index.html", gin.H{
+	extras.TemplateWithAuth(c, http.StatusOK, "index.html", gin.H{
 		"pageTitle": "Home",
 	})
 }
@@ -18,19 +20,19 @@ func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
 	if shortID != "" {
 		shortRow := db.GetShortByShortID(shortID)
-		c.HTML(http.StatusOK, "checker.html", gin.H{
+		extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
 			"pageTitle": "Checker",
 			"short":     shortRow,
 		})
 		return
 	}
-	c.HTML(http.StatusOK, "checker.html", gin.H{
+	extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
 		"pageTitle": "Checker",
 	})
 }
 
 func GetNew(c *gin.Context) {
-	c.HTML(http.StatusOK, "new.html", gin.H{
+	extras.TemplateWithAuth(c, http.StatusOK, "new.html", gin.H{
 		"pageTitle": "New",
 	})
 }
@@ -42,7 +44,10 @@ func PostNew(c *gin.Context) {
 		return
 	}
 	short := formValues.GenerateShort()
-	short.OwnerID = core.GetAuthenticatedUserID(c)
+	if userID := gincookieauth.GetUserID(c); userID != nil {
+		userID := (*userID).(uint)
+		short.OwnerID = &userID
+	}
 	if err := short.Create(); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return

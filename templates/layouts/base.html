@@ -14,6 +14,11 @@
             <a href="/">Home</a>
             <a href="/checker">Checker</a>
             <a href="/new">New</a>
+            {{ if .AuthData.IsAuthenticated }}
+            <a href="/users/logout">Logout</a>
+            {{ else }}
+            <a href="/users/login">Login</a>
+            {{ end }}
         </nav>
     </header>
     <main>
