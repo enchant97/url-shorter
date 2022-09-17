@@ -4,6 +4,7 @@ go 1.19
 
 require (
 	github.com/gin-contrib/multitemplate v0.0.0-20220829131020-8c2a8441bc2b
+	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.8.1
 	github.com/thanhpk/randstr v1.0.4
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
@@ -12,7 +13,6 @@ require (
 )
 
 require (
-	github.com/gin-contrib/sessions v0.0.5 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.0 // indirect
 	github.com/go-playground/universal-translator v0.18.0 // indirect

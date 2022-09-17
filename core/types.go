@@ -11,3 +11,8 @@ type CreateUser struct {
 	Password        string `form:"password" json:"password" binding:"required"`
 	PasswordConfirm string `form:"password-confirm" json:"passwordConfirm" binding:"required,eqcsfield=Password"`
 }
+
+type LoginUser struct {
+	Username string `form:"username" json:"username" binding:"required,printascii"`
+	Password string `form:"password" json:"password" binding:"required"`
+}

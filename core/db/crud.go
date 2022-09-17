@@ -21,3 +21,19 @@ func (s *Short) IncrVisitCount() int {
 	DB.Save(&s)
 	return s.VisitCount
 }
+
+func GetUserByUsername(username string) *User {
+	var userRow User
+	if err := DB.Where("username = ?", username).First(&userRow).Error; err != nil {
+		return nil
+	}
+	return &userRow
+}
+
+func GetUserByID(userID uint) *User {
+	var userRow User
+	if err := DB.Where("id = ?", userID).First(&userRow).Error; err != nil {
+		return nil
+	}
+	return &userRow
+}
