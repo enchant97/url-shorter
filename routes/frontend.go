@@ -42,6 +42,7 @@ func PostNew(c *gin.Context) {
 		return
 	}
 	short := formValues.GenerateShort()
+	short.OwnerID = core.GetAuthenticatedUserID(c)
 	if err := short.Create(); err != nil {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
