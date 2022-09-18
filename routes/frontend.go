@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/enchant97/go-gincookieauth"
@@ -59,11 +60,19 @@ func GetRedirect(c *gin.Context) {
 	shortID := c.Param("shortID")
 	shortRow := db.GetShortByShortID(shortID)
 	if shortRow == nil {
-		c.AbortWithStatus(http.StatusNotFound)
+		c.HTML(http.StatusNotFound, "error.html", gin.H{
+			"pageTitle":    "404",
+			"errorTitle":   "Page Could Not Be Found",
+			"errorMessage": fmt.Sprintf("The given short url with id '%s' could not be found, is your link valid?", shortID),
+		})
 	} else {
 		if shortRow.IsExpired() || !shortRow.IsUsable() {
 			defer func() { go func() { db.DB.Delete(&shortRow) }() }()
-			c.AbortWithStatus(http.StatusNotFound)
+			c.HTML(http.StatusNotFound, "error.html", gin.H{
+				"pageTitle":    "404",
+				"errorTitle":   "Page Could Not Be Found",
+				"errorMessage": fmt.Sprintf("The given short url with id '%s' has expired and cannot be used.", shortID),
+			})
 		} else {
 			// execute update in goroutine, as client doesn't need to wait for this
 			defer func() { go func() { shortRow.IncrVisitCount() }() }()
