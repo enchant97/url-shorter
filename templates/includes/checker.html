@@ -1,17 +1,53 @@
 {{define "content"}}
-<p>Use to ensure a short link goes where you expect.</p>
-<form action="/checker" method="get">
-    <label for="short-id">Short ID</label>
-    <input type="text" name="short-id" id="short-id" required>
-    <button type="submit">Check</button>
-</form>
+<section>
+    <h2>Short Checker</h2>
+    <p>Use to ensure a short link goes where you expect.</p>
+    <form action="/checker" method="get">
+        <label for="short-id">Short ID</label>
+        <input type="text" name="short-id" id="short-id" required>
+        <button type="submit">Check</button>
+    </form>
+</section>
+
 {{if .short}}
-<div>
-    <p>{{ .short.ShortID }}</p>
-    <p>{{ .short.TargetURL }}</p>
-    {{ if .short.TargetURL }}
+<section>
+    <h2>Short - {{ .short.ShortID }}</h2>
+    <table>
+        <caption>Info</caption>
+        <tbody>
+            <tr>
+                <th>ID</th>
+                <td>{{ .short.ShortID }}</td>
+            </tr>
+            <tr>
+                <th>Target URL</th>
+                <td><a href="/{{ .short.ShortID }}">{{ .short.TargetURL }}</a></td>
+            </tr>
+            <tr>
+                <th>Visit Count</th>
+                <td>{{ .short.VisitCount }}</td>
+            </tr>
+            <tr>
+                <th>Expiry</th>
+                <td>{{ .short.ExpiresAt }}</td>
+            </tr>
+            <tr>
+                <th>Max Uses</th>
+                <td>{{ .short.MaxUses }}</td>
+            </tr>
+            <tr>
+                <th>Owner</th>
+                <td>{{ .short.OwnerID }}</td>
+            </tr>
+        </tbody>
+    </table>
     <a href="/{{ .short.ShortID }}">Go</a>
-    {{end}}
-</div>
+</section>
+{{else}}
+<section>
+    <h2>Short - XXX</h2>
+    <p>No ID Given</p>
+</section>
 {{end}}
+
 {{end}}
