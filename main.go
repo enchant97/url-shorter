@@ -2,6 +2,7 @@ package main
 
 import (
 	"path/filepath"
+	"text/template"
 
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
@@ -29,7 +30,10 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 		layoutCopy := make([]string, len(layouts))
 		copy(layoutCopy, layouts)
 		files := append(layoutCopy, include)
-		r.AddFromFiles(filepath.Base(include), files...)
+		funcMap := template.FuncMap{
+			"timeToHumanOr": core.TimeToHumanOr,
+		}
+		r.AddFromFilesFuncs(filepath.Base(include), funcMap, files...)
 	}
 	return r
 }

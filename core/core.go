@@ -15,6 +15,14 @@ func MakeShortID() string {
 	return randstr.String(ShortIDLength)
 }
 
+// Convert given time to human readable or use default string if nil
+func TimeToHumanOr(inputTime *time.Time, nilDefault string) string {
+	if inputTime == nil {
+		return nilDefault
+	}
+	return inputTime.Format("2006-01-02 15:04")
+}
+
 func NullableIsoStringToTime(input *string) (*time.Time, error) {
 	if input == nil || *input == "" {
 		return nil, nil

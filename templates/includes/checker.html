@@ -29,15 +29,15 @@
             </tr>
             <tr>
                 <th>Expiry</th>
-                <td>{{ .short.ExpiresAt }}</td>
+                <td>{{ timeToHumanOr .short.ExpiresAt "never"  }}</td>
             </tr>
             <tr>
                 <th>Max Uses</th>
-                <td>{{ .short.MaxUses }}</td>
+                <td>{{ or .short.MaxUses "∞" }}</td>
             </tr>
             <tr>
                 <th>Owner</th>
-                <td>{{ .short.OwnerID }}</td>
+                <td>{{ or .short.OwnerID "-" }}</td>
             </tr>
         </tbody>
     </table>
