@@ -40,6 +40,6 @@ func (s *CreateShort) GenerateShort() db.Short {
 		TargetURL: s.TargetURL,
 		ShortID:   MakeShortID(),
 		ExpiresAt: expiresAt,
-		UsesLeft:  maxUses,
+		MaxUses:   maxUses,
 	}
 }

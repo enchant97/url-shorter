@@ -42,9 +42,9 @@ type Short struct {
 	BaseModel
 	ShortID    string     `gorm:"unique;not null" json:"shortId"`
 	TargetURL  string     `gorm:"not null" json:"targetUrl"`
-	VisitCount int        `gorm:"default:0;not null" json:"visitCount,omitempty"`
+	VisitCount uint       `gorm:"default:0;not null" json:"visitCount,omitempty"`
 	ExpiresAt  *time.Time `json:"expiresAt,omitempty"`
-	UsesLeft   *uint      `json:"usesLeft,omitempty"`
+	MaxUses    *uint      `json:"maxUses,omitempty"`
 	OwnerID    *uint      `json:"ownerId,omitempty"`
 }
 
@@ -58,8 +58,8 @@ func (s *Short) IsExpired() bool {
 
 // Whether the short can be used (a redirect)
 func (s *Short) IsUsable() bool {
-	if s.UsesLeft == nil {
+	if s.MaxUses == nil {
 		return true
 	}
-	return *s.UsesLeft > 0
+	return *s.MaxUses > s.VisitCount
 }
