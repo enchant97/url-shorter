@@ -41,3 +41,15 @@ func (s *CreateShort) GenerateShort() db.Short {
 		MaxUses:   maxUses,
 	}
 }
+
+func ShortToAPIShort(dbShort db.Short) APIShort {
+	return APIShort{
+		ShortID:    EncodeID(dbShort.ID),
+		TargetURL:  dbShort.TargetURL,
+		VisitCount: dbShort.VisitCount,
+		ExpiresAt:  dbShort.ExpiresAt,
+		MaxUses:    dbShort.MaxUses,
+		OwnerID:    dbShort.OwnerID,
+		CreatedAt:  dbShort.CreatedAt,
+	}
+}

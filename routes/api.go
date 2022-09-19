@@ -16,14 +16,14 @@ func PostApiNew(c *gin.Context) {
 		})
 		return
 	}
-	short := formValues.GenerateShort()
-	if err := short.Create(); err != nil {
+	shortRow := formValues.GenerateShort()
+	if err := shortRow.Create(); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"detail": "unable to create short",
 		})
 		return
 	}
-	c.JSON(http.StatusOK, short)
+	c.JSON(http.StatusOK, core.ShortToAPIShort(shortRow))
 }
 
 func GetApiInfo(c *gin.Context) {
@@ -41,7 +41,7 @@ func GetApiInfo(c *gin.Context) {
 	} else {
 		c.JSON(
 			http.StatusOK,
-			shortRow,
+			core.ShortToAPIShort(*shortRow),
 		)
 	}
 }

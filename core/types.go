@@ -1,5 +1,7 @@
 package core
 
+import "time"
+
 type CreateShort struct {
 	TargetURL string  `form:"target-url" json:"targetUrl" binding:"required"`
 	ExpiresAt *string `form:"expires-at" json:"expiresAt"`
@@ -15,4 +17,14 @@ type CreateUser struct {
 type LoginUser struct {
 	Username string `form:"username" json:"username" binding:"required,printascii"`
 	Password string `form:"password" json:"password" binding:"required"`
+}
+
+type APIShort struct {
+	ShortID    string
+	TargetURL  string     `json:"targetUrl"`
+	VisitCount uint       `json:"visitCount,omitempty"`
+	ExpiresAt  *time.Time `json:"expiresAt,omitempty"`
+	MaxUses    *uint      `json:"maxUses,omitempty"`
+	OwnerID    *uint      `json:"ownerId,omitempty"`
+	CreatedAt  time.Time  `json:"createdAt"`
 }
