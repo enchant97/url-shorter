@@ -20,7 +20,7 @@ func GetIndex(c *gin.Context) {
 func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
 	if shortID != "" {
-		if decodedID, err := core.DecodeID(shortID); err == nil {
+		if decodedID, err := core.DecodeIDPadded(shortID); err == nil {
 			shortRow := db.GetShortByID(uint(decodedID))
 			extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
 				"pageTitle": "Checker",
@@ -56,12 +56,12 @@ func PostNew(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	c.Redirect(http.StatusSeeOther, "/checker?short-id="+core.EncodeID(short.ID))
+	c.Redirect(http.StatusSeeOther, "/checker?short-id="+core.EncodeIDPadded(short.ID))
 }
 
 func GetRedirect(c *gin.Context) {
 	shortID := c.Param("shortID")
-	decodedID, err := core.DecodeID(shortID)
+	decodedID, err := core.DecodeIDPadded(shortID)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return

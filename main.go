@@ -31,8 +31,9 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 		copy(layoutCopy, layouts)
 		files := append(layoutCopy, include)
 		funcMap := template.FuncMap{
-			"timeToHumanOr": core.TimeToHumanOr,
-			"encodeID":      core.EncodeID,
+			"timeToHumanOr":  core.TimeToHumanOr,
+			"encodeID":       core.EncodeID,
+			"encodeIDPadded": core.EncodeIDPadded,
 		}
 		r.AddFromFilesFuncs(filepath.Base(include), funcMap, files...)
 	}

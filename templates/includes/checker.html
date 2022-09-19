@@ -17,7 +17,7 @@
         <tbody>
             <tr>
                 <th>ID</th>
-                <td>{{ .shortID }}</td>
+                <td>{{ .short.ID | encodeIDPadded }}</td>
             </tr>
             <tr>
                 <th>Target URL</th>

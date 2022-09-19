@@ -28,7 +28,7 @@ func PostApiNew(c *gin.Context) {
 
 func GetApiInfo(c *gin.Context) {
 	shortID := c.Param("shortID")
-	decodedID, err := core.DecodeID(shortID)
+	decodedID, err := core.DecodeIDPadded(shortID)
 	if err != nil {
 		c.AbortWithStatus(http.StatusNotFound)
 		return
