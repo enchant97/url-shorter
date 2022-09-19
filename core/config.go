@@ -20,8 +20,10 @@ func (b *Base64Decoded) UnmarshalText(text []byte) error {
 }
 
 type AppConfig struct {
-	SecretKey  Base64Decoded `env:"SECRET_KEY,notEmpty"`
-	SQLitePath string        `env:"DB_SQLITE_PATH,notEmpty"`
+	SecretKey        Base64Decoded `env:"SECRET_KEY,notEmpty"`
+	SQLitePath       string        `env:"DB_SQLITE_PATH,notEmpty"`
+	RequireLogin     bool          `env:"REQUIRE_LOGIN" envDefault:"false"`
+	AllowNewAccounts bool          `env:"ALLOW_NEW_ACCOUNTS" envDefault:"true"`
 }
 
 // Load the config from OS

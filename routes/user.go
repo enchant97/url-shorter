@@ -16,6 +16,14 @@ func GetNewUser(c *gin.Context) {
 	})
 }
 
+func GetNewUserAuthRequired(c *gin.Context) {
+	extras.TemplateWithAuth(c, http.StatusUnauthorized, "error.html", gin.H{
+		"pageTitle":    "New User",
+		"errorTitle":   "Account Creation Disabled",
+		"errorMessage": "No new user accounts can be created, as it has been disabled.",
+	})
+}
+
 func PostNewUser(c *gin.Context) {
 	var newUser core.CreateUser
 	if err := c.ShouldBind(&newUser); err != nil {

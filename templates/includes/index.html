@@ -1,9 +1,12 @@
 {{define "content"}}
 <p>Create a shortened link quickly with no additional settings.</p>
+{{ if and .AppConfig.RequireLogin (not .AuthData.IsAuthenticated) }}
+{{ else }}
 <form action="/new" method="post">
     <label for="target-url">Target URL</label>
     <input type="url" name="target-url" id="target-url" required>
     <button type="submit">Shorten It!</button>
 </form>
 <a href="/new">Advanced</a>
+{{ end }}
 {{end}}

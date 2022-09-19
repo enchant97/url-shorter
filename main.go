@@ -52,6 +52,6 @@ func main() {
 
 	r.HTMLRender = loadTemplates("./templates")
 	r.Static("/static", "./static")
-	routes.InitRoutes(r, appConfig.SecretKey)
+	routes.InitRoutes(r, appConfig)
 	r.Run("localhost:8080")
 }
