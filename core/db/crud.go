@@ -1,8 +1,8 @@
 package db
 
-func GetShortByShortID(shortID string) *Short {
+func GetShortByID(id uint) *Short {
 	var shortRow Short
-	if err := DB.Where("short_id = ?", shortID).First(&shortRow).Error; err != nil {
+	if err := DB.Where("id = ?", id).First(&shortRow).Error; err != nil {
 		return nil
 	}
 	return &shortRow

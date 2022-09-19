@@ -20,12 +20,15 @@ func GetIndex(c *gin.Context) {
 func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
 	if shortID != "" {
-		shortRow := db.GetShortByShortID(shortID)
-		extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
-			"pageTitle": "Checker",
-			"short":     shortRow,
-		})
-		return
+		if decodedID, err := core.DecodeID(shortID); err == nil {
+			shortRow := db.GetShortByID(uint(decodedID))
+			extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
+				"pageTitle": "Checker",
+				"short":     shortRow,
+				"shortID":   shortID,
+			})
+			return
+		}
 	}
 	extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
 		"pageTitle": "Checker",
@@ -53,12 +56,17 @@ func PostNew(c *gin.Context) {
 		c.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
-	c.Redirect(http.StatusSeeOther, "/checker?short-id="+short.ShortID)
+	c.Redirect(http.StatusSeeOther, "/checker?short-id="+core.EncodeID(short.ID))
 }
 
 func GetRedirect(c *gin.Context) {
 	shortID := c.Param("shortID")
-	shortRow := db.GetShortByShortID(shortID)
+	decodedID, err := core.DecodeID(shortID)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	shortRow := db.GetShortByID(uint(decodedID))
 	if shortRow == nil {
 		c.HTML(http.StatusNotFound, "error.html", gin.H{
 			"pageTitle":    "404",

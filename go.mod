@@ -7,7 +7,7 @@ require (
 	github.com/enchant97/go-gincookieauth v0.0.0-20220917203500-bca6e2c9dc8e
 	github.com/gin-contrib/multitemplate v0.0.0-20220829131020-8c2a8441bc2b
 	github.com/gin-gonic/gin v1.8.1
-	github.com/thanhpk/randstr v1.0.4
+	github.com/jxskiss/base62 v1.1.0
 	golang.org/x/crypto v0.0.0-20220829220503-c86fa9a7ed90
 	gorm.io/driver/sqlite v1.3.6
 	gorm.io/gorm v1.23.8

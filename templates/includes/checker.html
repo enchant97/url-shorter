@@ -11,17 +11,17 @@
 
 {{if .short}}
 <section>
-    <h2>Short - {{ .short.ShortID }}</h2>
+    <h2>Short - {{ .shortID }}</h2>
     <table>
         <caption>Info</caption>
         <tbody>
             <tr>
                 <th>ID</th>
-                <td>{{ .short.ShortID }}</td>
+                <td>{{ .shortID }}</td>
             </tr>
             <tr>
                 <th>Target URL</th>
-                <td><a href="/{{ .short.ShortID }}">{{ .short.TargetURL }}</a></td>
+                <td><a href="/{{ .shortID }}">{{ .short.TargetURL }}</a></td>
             </tr>
             <tr>
                 <th>Visit Count</th>
@@ -41,7 +41,7 @@
             </tr>
         </tbody>
     </table>
-    <a href="/{{ .short.ShortID }}">Go</a>
+    <a href="/{{ .shortID }}">Go</a>
 </section>
 {{else}}
 <section>

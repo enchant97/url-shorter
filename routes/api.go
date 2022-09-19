@@ -28,7 +28,12 @@ func PostApiNew(c *gin.Context) {
 
 func GetApiInfo(c *gin.Context) {
 	shortID := c.Param("shortID")
-	shortRow := db.GetShortByShortID(shortID)
+	decodedID, err := core.DecodeID(shortID)
+	if err != nil {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+	shortRow := db.GetShortByID(uint(decodedID))
 	if shortRow == nil {
 		c.AbortWithStatusJSON(http.StatusNotFound, gin.H{
 			"detail": "short id not found",

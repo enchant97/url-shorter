@@ -40,7 +40,6 @@ func (u *User) IsPasswordMatch(plainPassword string) bool {
 
 type Short struct {
 	BaseModel
-	ShortID    string     `gorm:"unique;not null" json:"shortId"`
 	TargetURL  string     `gorm:"not null" json:"targetUrl"`
 	VisitCount uint       `gorm:"default:0;not null" json:"visitCount,omitempty"`
 	ExpiresAt  *time.Time `json:"expiresAt,omitempty"`
