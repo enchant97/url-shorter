@@ -16,8 +16,7 @@ func InitRoutes(r *gin.Engine, secretKey []byte) {
 
 	frontendRoutes := r.Group("/")
 	{
-		frontendRoutes.Use(session)
-		frontendRoutes.Use(cookieAuth)
+		frontendRoutes.Use(session, cookieAuth)
 		frontendRoutes.GET("/", GetIndex)
 		frontendRoutes.GET("/checker", GetChecker)
 		frontendRoutes.GET("/new", GetNew)
@@ -25,8 +24,7 @@ func InitRoutes(r *gin.Engine, secretKey []byte) {
 	}
 	userRoutes := r.Group("/users")
 	{
-		userRoutes.Use(session)
-		userRoutes.Use(cookieAuth)
+		userRoutes.Use(session, cookieAuth)
 		userRoutes.GET("/new", GetNewUser)
 		userRoutes.POST("/new", PostNewUser)
 		userRoutes.GET("/login", GetLoginUser)
