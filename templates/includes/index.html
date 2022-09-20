@@ -1,12 +1,27 @@
 {{define "content"}}
-<p>Create a shortened link quickly with no additional settings.</p>
+<section>
+    <h2>About</h2>
+    <p>
+        Link Shorter is a link shortening app written in Go,
+        aiming to provide a fast and simple way of shortening links.
+    </p>
+</section>
+
 {{ if and .AppConfig.RequireLogin (not .AuthData.IsAuthenticated) }}
+<p>Short creation is currently restricted to logged in users only. Login <a href="/users/login">here</a>.</p>
 {{ else }}
-<form action="/new" method="post">
-    <label for="target-url">Target URL</label>
-    <input type="url" name="target-url" id="target-url" required>
-    <button type="submit">Shorten It!</button>
-</form>
-<a href="/new">Advanced</a>
+<section>
+    <h2>Quick Shorten</h2>
+    <p>
+        Here you can create a shortened link quickly.
+        Go to the advanced creation page <a href="/new">here</a> for additional configuration.
+    </p>
+    <form action="/new" method="post">
+        <label for="target-url">Target URL</label>
+        <input type="url" name="target-url" id="target-url" required>
+        <button type="submit">Shorten It!</button>
+    </form>
+</section>
 {{ end }}
+
 {{end}}

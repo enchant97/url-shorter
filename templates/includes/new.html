@@ -1,12 +1,24 @@
 {{define "content"}}
-<form action="/new" method="post">
-    <label for="target-url">Target URL</label>
-    <input type="url" name="target-url" id="target-url" required>
-    <label for="expires-at">Expiry</label>
-    <input type="datetime-local" name="expires-at" id="expires-at">
-    <label for="max-uses">Max Uses</label>
-    <input type="number" name="max-uses" id="max-uses" min="0">
-    <button type="submit">Shorten</button>
-</form>
+<section>
+    <h2>Create A Short</h2>
+    <p>
+        Use this page to create a new short.
+    </p>
+    {{ if not .AuthData.IsAuthenticated }}
+    <p>
+        You are not currently logged in,
+        any created shorts cannot be managed after creation.
+    </p>
+    {{ end }}
+    <form action="/new" method="post">
+        <label for="target-url">Target URL</label>
+        <input type="url" name="target-url" id="target-url" required>
+        <label for="expires-at">Expiry</label>
+        <input type="datetime-local" name="expires-at" id="expires-at">
+        <label for="max-uses">Max Uses</label>
+        <input type="number" name="max-uses" id="max-uses" min="0">
+        <button type="submit">Shorten</button>
+    </form>
+</section>
 
 {{end}}
