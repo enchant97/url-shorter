@@ -70,8 +70,9 @@ func PostNew(c *gin.Context) {
 
 func GetRedirect(c *gin.Context) {
 	shortID := c.Param("shortID")
-	decodedID, err := core.DecodeIDPadded(shortID)
+	decodedID, err := core.DecodePossibleShortID(shortID)
 	if err != nil {
+		// not valid short id
 		c.AbortWithStatus(http.StatusNotFound)
 		return
 	}

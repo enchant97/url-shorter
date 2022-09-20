@@ -1,6 +1,8 @@
 package core
 
 import (
+	"fmt"
+	"regexp"
 	"strings"
 
 	"github.com/jxskiss/base62"
@@ -10,6 +12,8 @@ const (
 	padSep   = "-"
 	padEvery = 6
 )
+
+var allowedShortIDRegex = regexp.MustCompile(`^[a-zA-Z0-9,-]+$`)
 
 // Insert a separator every n character
 func padSepString(s string, insertEvery int, sep string) string {
@@ -47,4 +51,17 @@ func EncodeIDPadded(id uint) string {
 func DecodeIDPadded(encodedID string) (uint64, error) {
 	encodedID = strings.ReplaceAll(encodedID, padSep, "")
 	return DecodeID(encodedID)
+}
+
+// Try to decode a short id from user input into a db id,
+// allowing for human friendly padding
+func DecodePossibleShortID(shortID string) (uint64, error) {
+	if !allowedShortIDRegex.MatchString(shortID) {
+		return 0, fmt.Errorf("does not match accepted regex")
+	}
+	decodedID, err := DecodeIDPadded(shortID)
+	if err != nil {
+		return 0, err
+	}
+	return decodedID, nil
 }
