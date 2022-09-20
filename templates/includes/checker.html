@@ -1,5 +1,5 @@
 {{define "content"}}
-<section>
+<section class="panel">
     <h2>Short Checker</h2>
     <p>Use to ensure a short link goes where you expect.</p>
     <form action="/checker" method="get">
@@ -10,7 +10,7 @@
 </section>
 
 {{if .short}}
-<section>
+<section class="panel">
     <h2>Short - {{ .shortID }}</h2>
     <table>
         <caption>Info</caption>
@@ -44,7 +44,7 @@
     <a href="/{{ .shortID }}">Go</a>
 </section>
 {{else}}
-<section>
+<section class="panel">
     <h2>Short - XXX</h2>
     <p>No ID Given</p>
 </section>

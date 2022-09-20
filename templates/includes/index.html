@@ -1,5 +1,5 @@
 {{define "content"}}
-<section>
+<section class="panel">
     <h2>About</h2>
     <p>
         Link Shorter is a link shortening app written in Go,
@@ -10,7 +10,7 @@
 {{ if and .AppConfig.RequireLogin (not .AuthData.IsAuthenticated) }}
 <p>Short creation is currently restricted to logged in users only. Login <a href="/users/login">here</a>.</p>
 {{ else }}
-<section>
+<section class="panel">
     <h2>Quick Shorten</h2>
     <p>
         Here you can create a shortened link quickly.
