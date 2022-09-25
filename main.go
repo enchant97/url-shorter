@@ -7,6 +7,7 @@ import (
 
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
+	"github.com/enchant97/url-shorter/core/flash"
 	"github.com/enchant97/url-shorter/routes"
 	"github.com/gin-contrib/multitemplate"
 	"github.com/gin-gonic/gin"
@@ -44,7 +45,7 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 func main() {
 	// Register type for cookie session
 	// not sure why it was needed?
-	gob.Register(core.Flash{})
+	gob.Register(flash.Flash{})
 
 	r := gin.Default()
 
