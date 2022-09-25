@@ -27,6 +27,11 @@ func padSepString(s string, insertEvery int, sep string) string {
 	return s
 }
 
+// Check whether given id is a valid ShortID (with or without padding)
+func IsValidShortID(shortID string) bool {
+	return allowedShortIDRegex.MatchString(shortID)
+}
+
 // Encode a db id into a short id
 func EncodeID(id uint) string {
 	raw := base62.FormatUint(uint64(id))
@@ -56,7 +61,7 @@ func DecodeIDPadded(encodedID string) (uint64, error) {
 // Try to decode a short id from user input into a db id,
 // allowing for human friendly padding
 func DecodePossibleShortID(shortID string) (uint64, error) {
-	if !allowedShortIDRegex.MatchString(shortID) {
+	if !IsValidShortID(shortID) {
 		return 0, fmt.Errorf("does not match accepted regex")
 	}
 	decodedID, err := DecodeIDPadded(shortID)

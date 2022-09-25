@@ -20,8 +20,11 @@ func GetIndex(c *gin.Context) {
 
 func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
-	// there is a short id given
-	if shortID != "" {
+	if shortID != "" && !core.IsValidShortID(shortID) {
+		// ensure id is valid
+		flash.FlashWarning(c, fmt.Sprintf("Provided short id '%s' is not valid.", shortID))
+	} else if shortID != "" {
+		// get short id if it exists
 		if decodedID, err := core.DecodeIDPadded(shortID); err == nil {
 			shortRow := db.GetShortByID(uint(decodedID))
 			core.HTMLTemplate(c, http.StatusOK, "checker.html", gin.H{
