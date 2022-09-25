@@ -6,6 +6,7 @@ import (
 	"github.com/enchant97/go-gincookieauth"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
+	"github.com/enchant97/url-shorter/core/flash"
 	"github.com/gin-gonic/gin"
 )
 
@@ -53,10 +54,12 @@ func GetLoginUser(c *gin.Context) {
 
 func PostLoginUser(c *gin.Context) {
 	var userLogin core.LoginUser
+	// validate login form fields
 	if err := c.ShouldBind(&userLogin); err != nil {
 		c.AbortWithStatus(http.StatusBadRequest)
 		return
 	}
+	// check user from db, if match is found do login stuff
 	if user := db.GetUserByUsername(userLogin.Username); user != nil {
 		if user.IsPasswordMatch(userLogin.Password) {
 			gincookieauth.LoginUser(c, user.ID)
@@ -64,6 +67,8 @@ func PostLoginUser(c *gin.Context) {
 			return
 		}
 	}
+	// failed login check
+	flash.FlashError(c, "Login details invalid")
 	c.Redirect(http.StatusSeeOther, "/users/login")
 }
 

@@ -7,6 +7,7 @@ import (
 	"github.com/enchant97/go-gincookieauth"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
+	"github.com/enchant97/url-shorter/core/flash"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,6 +20,7 @@ func GetIndex(c *gin.Context) {
 
 func GetChecker(c *gin.Context) {
 	shortID := c.Query("short-id")
+	// there is a short id given
 	if shortID != "" {
 		if decodedID, err := core.DecodeIDPadded(shortID); err == nil {
 			shortRow := db.GetShortByID(uint(decodedID))
@@ -29,7 +31,9 @@ func GetChecker(c *gin.Context) {
 			})
 			return
 		}
+		flash.FlashWarning(c, fmt.Sprintf("Provided short id '%s' was not found.", shortID))
 	}
+	// no short id or invalid
 	core.HTMLTemplate(c, http.StatusOK, "checker.html", gin.H{
 		"pageTitle": "Checker",
 	})
