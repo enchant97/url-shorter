@@ -26,6 +26,11 @@
             {{ end }}
         </nav>
     </header>
+    <div id="flashes">
+        {{ range $flash := .Flashes }}
+        <div class="{{ $flash.Type }}">{{ $flash.Message }}</div>
+        {{ end }}
+    </div>
     <main>
         {{template "content" .}}
     </main>

@@ -4,20 +4,19 @@ import (
 	"net/http"
 
 	"github.com/enchant97/go-gincookieauth"
-	"github.com/enchant97/go-gincookieauth/extras"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
 	"github.com/gin-gonic/gin"
 )
 
 func GetNewUser(c *gin.Context) {
-	extras.TemplateWithAuth(c, http.StatusOK, "new-user.html", gin.H{
+	core.HTMLTemplate(c, http.StatusOK, "new-user.html", gin.H{
 		"pageTitle": "New User",
 	})
 }
 
 func GetNewUserAuthRequired(c *gin.Context) {
-	extras.TemplateWithAuth(c, http.StatusUnauthorized, "error.html", gin.H{
+	core.HTMLTemplate(c, http.StatusUnauthorized, "error.html", gin.H{
 		"pageTitle":    "New User",
 		"errorTitle":   "Account Creation Disabled",
 		"errorMessage": "No new user accounts can be created, as it has been disabled.",
@@ -47,7 +46,7 @@ func GetLoginUser(c *gin.Context) {
 		c.Redirect(http.StatusTemporaryRedirect, "/")
 		return
 	}
-	extras.TemplateWithAuth(c, http.StatusOK, "login-user.html", gin.H{
+	core.HTMLTemplate(c, http.StatusOK, "login-user.html", gin.H{
 		"pageTitle": "Login",
 	})
 }

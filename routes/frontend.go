@@ -5,14 +5,13 @@ import (
 	"net/http"
 
 	"github.com/enchant97/go-gincookieauth"
-	"github.com/enchant97/go-gincookieauth/extras"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/core/db"
 	"github.com/gin-gonic/gin"
 )
 
 func GetIndex(c *gin.Context) {
-	extras.TemplateWithAuth(c, http.StatusOK, "index.html", gin.H{
+	core.HTMLTemplate(c, http.StatusOK, "index.html", gin.H{
 		"pageTitle": "Home",
 		"AppConfig": c.MustGet("AppConfig"),
 	})
@@ -23,7 +22,7 @@ func GetChecker(c *gin.Context) {
 	if shortID != "" {
 		if decodedID, err := core.DecodeIDPadded(shortID); err == nil {
 			shortRow := db.GetShortByID(uint(decodedID))
-			extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
+			core.HTMLTemplate(c, http.StatusOK, "checker.html", gin.H{
 				"pageTitle": "Checker",
 				"short":     shortRow,
 				"shortID":   shortID,
@@ -31,19 +30,19 @@ func GetChecker(c *gin.Context) {
 			return
 		}
 	}
-	extras.TemplateWithAuth(c, http.StatusOK, "checker.html", gin.H{
+	core.HTMLTemplate(c, http.StatusOK, "checker.html", gin.H{
 		"pageTitle": "Checker",
 	})
 }
 
 func GetNew(c *gin.Context) {
-	extras.TemplateWithAuth(c, http.StatusOK, "new.html", gin.H{
+	core.HTMLTemplate(c, http.StatusOK, "new.html", gin.H{
 		"pageTitle": "New",
 	})
 }
 
 func GetNewAuthRequired(c *gin.Context) {
-	extras.TemplateWithAuth(c, http.StatusUnauthorized, "error.html", gin.H{
+	core.HTMLTemplate(c, http.StatusUnauthorized, "error.html", gin.H{
 		"pageTitle":    "New",
 		"errorTitle":   "Login Required",
 		"errorMessage": "This page is restricted to logged in users only.",
