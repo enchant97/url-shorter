@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/gob"
 	"html/template"
 	"path/filepath"
 
@@ -41,6 +42,10 @@ func loadTemplates(templatesDir string) multitemplate.Renderer {
 }
 
 func main() {
+	// Register type for cookie session
+	// not sure why it was needed?
+	gob.Register(core.Flash{})
+
 	r := gin.Default()
 
 	var appConfig core.AppConfig

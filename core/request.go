@@ -8,12 +8,6 @@ import (
 
 const FlashesKey = "Flashes"
 
-// Replaces gin.Context.HTML() to add specific data into them
-func HTMLTemplate(c *gin.Context, code int, name string, obj gin.H) {
-	obj[FlashesKey] = ReadFlashes(c)
-	extras.TemplateWithAuth(c, code, name, obj)
-}
-
 // A flashed message
 type Flash struct {
 	Message string
@@ -24,7 +18,9 @@ type Flash struct {
 func WriteFlash(c *gin.Context, flash Flash) {
 	session := sessions.Default(c)
 	session.AddFlash(flash)
-	session.Save() // TODO handle error
+	if err := session.Save(); err != nil {
+		panic(err)
+	}
 }
 
 // Read all flashed messages for session
@@ -32,11 +28,19 @@ func ReadFlashes(c *gin.Context) []Flash {
 	session := sessions.Default(c)
 	flashes := session.Flashes()
 	if len(flashes) != 0 {
-		session.Save() // TODO handle error
+		if err := session.Save(); err != nil {
+			panic(err)
+		}
 	}
 	var flashesMessages []Flash
 	for _, flash := range flashes {
 		flashesMessages = append(flashesMessages, flash.(Flash))
 	}
 	return flashesMessages
+}
+
+// Replaces gin.Context.HTML() to add specific data into them
+func HTMLTemplate(c *gin.Context, code int, name string, obj gin.H) {
+	obj[FlashesKey] = ReadFlashes(c)
+	extras.TemplateWithAuth(c, code, name, obj)
 }
