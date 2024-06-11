@@ -1,3 +1,7 @@
 [Tt]humbs.db
 *.DS_Store
 ~$*
+
+# !!! Remove Later !!!
+/components/*_templ.go
+/doc/
