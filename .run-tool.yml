@@ -12,6 +12,7 @@ targets:
     args:
       - "run"
       - "-it"
+      - "--rm"
       - "--name"
       - "urlshorter-postgres"
       - "-p"
