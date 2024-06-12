@@ -7,3 +7,24 @@ targets:
     program: templ
     args:
       - generate
+  postgres:
+    program: docker
+    args:
+      - "run"
+      - "-it"
+      - "--name"
+      - "urlshorter-postgres"
+      - "-p"
+      - "127.0.0.1:5432:5432"
+      - "-e"
+      - "POSTGRES_USER=urlshorter"
+      - "-e"
+      - "POSTGRES_PASSWORD=urlshorter"
+      - "postgres:16-alpine"
+  run-app:
+    program: go
+    args:
+      - "run"
+      - "."
+    env:
+      DB_URI: "postgres://urlshorter:urlshorter@127.0.0.1:5432/urlshorter?sslmode=disable"

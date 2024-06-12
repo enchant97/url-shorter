@@ -3,6 +3,6 @@ CREATE TABLE shorts (
     created_at timestamp not null,
     updated_at timestamp not null,
     deleted_at timestamp,
-    slug varchar(128) not null,
+    slug varchar(128) not null unique,
     target_url text not null
 );
