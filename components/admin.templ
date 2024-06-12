@@ -1,0 +1,33 @@
+package components
+
+templ CreateShortForm(generatedSlug string, shortenedUrl string) {
+	<div id="create-short-form">
+		<h1>New Short</h1>
+		<form hx-post="/ui/_post_new_short" hx-target="#create-short-form">
+			<input type="text" name="slug" value={ generatedSlug } maxlength="128" required/>
+			<input type="url" name="targetUrl" required/>
+			<button type="submit">Submit</button>
+		</form>
+		if shortenedUrl != "" {
+			<div>
+				<h2>Created Short</h2>
+				<input type="text" value={ shortenedUrl } readonly/>
+			</div>
+		}
+	</div>
+}
+
+templ CreateShortPage(generatedSlug string) {
+	@Base() {
+		@CreateShortForm(generatedSlug, "")
+	}
+}
+
+templ DashboardPage() {
+	@Base() {
+		<div hx-boost="true">
+			<h1>Dashboard</h1>
+			<a href="/ui/new">New Short</a>
+		</div>
+	}
+}

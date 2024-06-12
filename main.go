@@ -18,10 +18,12 @@ func main() {
 
 	s := fuego.NewServer(fuego.WithPort(8080))
 
-	web := fuego.Group(s, "/")
-	web.Hide()
-
-	fuego.Get(web, "/", handlers.GetIndex)
+	ui := fuego.Group(s, "/")
+	ui.Hide()
+	fuego.Get(ui, "/", handlers.GetIndex)
+	fuego.Get(ui, "/ui/", handlers.GetDashboard)
+	fuego.Get(ui, "/ui/new", handlers.GetNewShort)
+	fuego.Post(ui, "/ui/_post_new_short", handlers.PostNewShort)
 
 	s.Run()
 }
