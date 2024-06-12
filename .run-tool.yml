@@ -1,0 +1,9 @@
+targets:
+  gen-db:
+    program: sqlc
+    args:
+      - generate
+  gen-ui:
+    program: templ
+    args:
+      - generate
