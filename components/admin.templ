@@ -1,25 +1,35 @@
 package components
 
-templ CreateShortForm(generatedSlug string, shortenedUrl string) {
-	<div id="create-short-form">
+templ CreateShortForm(shortenedUrl *string) {
+	<div id="create-short-form" hx-ext="response-targets">
 		<h1>New Short</h1>
-		<form hx-post="/ui/_post_new_short" hx-target="#create-short-form">
-			<input type="text" name="slug" value={ generatedSlug } maxlength="128" required/>
-			<input type="url" name="targetUrl" required/>
+		<form class="flex flex-col gap-2 p-2 max-w-md" hx-post="/ui/_post_new_short" hx-target="#create-short-form" hx-target-error="#create-short-form-response">
+            <label class="flex flex-col gap-2">
+                <span>Shortened Name</span>
+    			<input type="text" name="slug" placeholder="(leave blank for random)"/>
+            </label>
+            <label class="flex flex-col gap-2">
+                <span>Target URL</span>
+                <input type="url" name="targetUrl" placeholder="https://example.com" required/>
+            </label>
 			<button type="submit">Submit</button>
-		</form>
-		if shortenedUrl != "" {
-			<div>
-				<h2>Created Short</h2>
-				<input type="text" value={ shortenedUrl } readonly/>
+			<div id="create-short-form-response">
+				if shortenedUrl != nil {
+					@FlashBox("new short created", FlashMessage) {
+                        <label>
+                            <span>Created Short:</span>
+    						<input type="text" value={ *shortenedUrl } readonly/>
+                        </label>
+					}
+				}
 			</div>
-		}
+		</form>
 	</div>
 }
 
-templ CreateShortPage(generatedSlug string) {
+templ CreateShortPage() {
 	@Base() {
-		@CreateShortForm(generatedSlug, "")
+		@CreateShortForm(nil)
 	}
 }
 

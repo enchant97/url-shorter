@@ -1,0 +1,16 @@
+package components
+
+type FlashType string
+
+const (
+	FlashMessage FlashType = "message"
+	FlashError   FlashType = "error"
+)
+
+templ FlashBox(content string, flashType FlashType) {
+	<div>
+		<span>({ string(flashType) })</span>
+		<span>{ content }</span>
+		{ children... }
+	</div>
+}
