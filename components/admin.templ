@@ -17,7 +17,13 @@ templ CreateShortForm(shortenedUrl *string) {
 		>
 			<label class="form-control">
 				<span class="label-text">Shortened Name</span>
-				<input class="input input-bordered" type="text" name="slug" placeholder="(leave blank for random)"/>
+				<input
+					class="input input-bordered"
+					type="text"
+					pattern="^[A-Za-z0-9]+$"
+					name="slug"
+					placeholder="(leave blank for random)"
+				/>
 			</label>
 			<label class="form-control">
 				<span class="label-text">Target URL</span>
@@ -58,8 +64,7 @@ templ LatestShorts(shorts []db.LatestShortsRow) {
 					<td><code class="kbd">{ row.Slug }</code></td>
 					<td>
 						<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
-							{
-                    row.CreatedAt.Time.Format("2006-01-02") }
+							{ row.CreatedAt.Time.Format("2006-01-02") }
 						</time>
 					</td>
 				</tr>

@@ -1,8 +1,6 @@
 package handlers
 
 import (
-	"crypto/rand"
-	"encoding/base64"
 	"errors"
 	"fmt"
 	"net/http"
@@ -47,17 +45,14 @@ func (h *UiHandler) GetNewShort(c fuego.ContextNoBody) (fuego.Templ, error) {
 }
 
 type NewShortForm struct {
-	// TODO: Add validation to this
-	Slug      string `form:"slug"`
-	TargetUrl string `form:"targetUrl" validate:"required"`
+	Slug      string `form:"slug" validate:"omitempty,alphanum"`
+	TargetUrl string `form:"targetUrl" validate:"required,http_url"`
 }
 
 func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.Templ, error) {
 	b := c.MustBody()
 	if b.Slug == "" {
-		randomBytes := make([]byte, 5)
-		rand.Read(randomBytes)
-		b.Slug = base64.RawURLEncoding.EncodeToString(randomBytes)
+		b.Slug = core.GenerateRandomSlug(6)
 	}
 	if _, err := h.dao.CreateShort(c.Context(), db.CreateShortParams{
 		Slug:      b.Slug,
