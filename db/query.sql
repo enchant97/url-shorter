@@ -8,4 +8,4 @@ RETURNING id;
 
 -- name: GetShortTargetBySlug :one
 SELECT target_url FROM shorts
-WHERE slug = $1 AND deleted_at = null;
+WHERE slug = $1 AND deleted_at IS null;

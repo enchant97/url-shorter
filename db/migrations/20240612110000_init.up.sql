@@ -1,8 +1,8 @@
 CREATE TABLE shorts (
     id bigint primary key generated always as identity,
-    created_at timestamp not null,
-    updated_at timestamp not null,
-    deleted_at timestamp,
-    slug varchar(128) not null unique,
+    created_at timestamptz not null default now(),
+    updated_at timestamptz not null default now(),
+    deleted_at timestamptz,
+    slug text not null unique,
     target_url text not null
 );

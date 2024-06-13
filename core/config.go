@@ -1,9 +1,10 @@
-package main
+package core
 
 import "github.com/caarlos0/env/v6"
 
 type AppConfig struct {
-	DbUri string `env:"DB_URI,notEmpty"`
+	DbUri     string `env:"DB_URI,notEmpty"`
+	PublicUrl string `env:"PUBLIC_URL,notEmpty"`
 }
 
 func (appConfig *AppConfig) ParseConfig() error {

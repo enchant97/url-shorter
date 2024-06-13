@@ -29,3 +29,4 @@ targets:
       - "."
     env:
       DB_URI: "postgres://urlshorter:urlshorter@127.0.0.1:5432/urlshorter?sslmode=disable"
+      PUBLIC_URL: "http://localhost:8080"
