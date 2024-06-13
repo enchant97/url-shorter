@@ -1,8 +1,13 @@
 package components
 
+import (
+    "strconv"
+    "github.com/enchant97/url-shorter/db"
+)
+
 templ CreateShortForm(shortenedUrl *string) {
 	<div id="create-short-form" hx-ext="response-targets">
-		<h1>New Short</h1>
+		<h1 class="text-2xl font-bold">New Short</h1>
 		<form class="flex flex-col gap-2 p-2 max-w-md" hx-post="/ui/_post_new_short" hx-target="#create-short-form" hx-target-error="#create-short-form-response">
             <label class="flex flex-col gap-2">
                 <span>Shortened Name</span>
@@ -33,11 +38,30 @@ templ CreateShortPage() {
 	}
 }
 
+templ LatestShorts(shorts []db.LatestShortsRow) {
+    <table class="w-full">
+        <tbody>
+            for _, row := range shorts {
+                <tr data-short-id={ strconv.FormatInt(row.ID, 10) }>
+                    <td>{ row.Slug }</td>
+                    <td>{ row.CreatedAt.Time.Format("2006-01-02") }</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
 templ DashboardPage() {
 	@Base() {
 		<div hx-boost="true">
-			<h1>Dashboard</h1>
+			<h1 class="text-2xl font-bold">Dashboard</h1>
 			<a href="/ui/new">New Short</a>
+            <div>
+                <h2 class="text-xl font-bold">Latest Shorts</h2>
+                <div hx-get="/ui/_get_latest_shorts" hx-trigger="revealed">
+                    Loading...
+                </div>
+            </div>
 		</div>
 	}
 }

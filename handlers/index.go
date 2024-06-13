@@ -30,6 +30,14 @@ func (h *UiHandler) GetIndex(c fuego.ContextNoBody) (fuego.Templ, error) {
 	return components.Index(), nil
 }
 
+func (h *UiHandler) GetLatestShorts(c fuego.ContextNoBody) (fuego.Templ, error) {
+	if shorts, err := h.dao.LatestShorts(c.Context(), 6); err != nil {
+		return nil, err
+	} else {
+		return components.LatestShorts(shorts), nil
+	}
+}
+
 func (h *UiHandler) GetDashboard(c fuego.ContextNoBody) (fuego.Templ, error) {
 	return components.DashboardPage(), nil
 }
