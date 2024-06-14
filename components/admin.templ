@@ -15,14 +15,60 @@ templ CreateShortForm(shortenedUrl *string) {
 			hx-target="#create-short-form"
 			hx-target-error="#create-short-form-response"
 		>
+            <script>
+                function shortTypeChange() {
+                    let isChecked = document.querySelector('#create-short-form input[value=custom]').checked;
+                    let customInput = document.querySelector('#create-short-form input[name=customSlug]');
+                    customInput.disabled = !isChecked;
+                }
+            </script>
+            <fieldset>
+                <legend>Short Type</legend>
+                <div>
+                    <label class="label cursor-pointer">
+                        <span class="label-text">Short UID</span>
+                        <input
+                            class="radio"
+                            type="radio"
+                            name="slugType"
+                            value="short"
+                            hx-on:change="shortTypeChange()"
+                            checked
+                        />
+                    </label>
+                    <label class="label cursor-pointer">
+                        <span class="label-text">Long UID</span>
+                        <input
+                            class="radio"
+                            type="radio"
+                            name="slugType"
+                            value="long"
+                            hx-on:change="shortTypeChange()"
+                        />
+                    </label>
+                    <label class="label cursor-pointer">
+                        <span class="label-text">Custom Name</span>
+                        <input
+                            class="radio"
+                            type="radio"
+                            name="slugType"
+                            value="custom"
+                            hx-on:change="shortTypeChange()"
+                        />
+                    </label>
+                </div>
+            </fieldset>
 			<label class="form-control">
-				<span class="label-text">Shortened Name</span>
+				<span class="label-text">Custom Name</span>
 				<input
 					class="input input-bordered"
 					type="text"
 					pattern="^[A-Za-z0-9]+$"
-					name="slug"
-					placeholder="(leave blank for random)"
+					name="customSlug"
+					placeholder="e.g. favSite"
+                    maxlength="128"
+                    disabled
+                    required
 				/>
 			</label>
 			<label class="form-control">
@@ -31,7 +77,8 @@ templ CreateShortForm(shortenedUrl *string) {
 					class="input input-bordered"
 					type="url"
 					name="targetUrl"
-					placeholder="https://example.com"
+					placeholder="e.g. https://example.com"
+                    maxlength="8000"
 					required
 				/>
 			</label>
@@ -74,6 +121,7 @@ templ EditShortForm(short db.Short) {
                     name="targetUrl"
                     placeholder="https://example.com"
                     value={ short.TargetUrl }
+                    maxlength="8000"
                     required
                 />
             </label>
@@ -90,23 +138,32 @@ templ EditShortPage(short db.Short) {
 }
 
 templ LatestShorts(shorts []db.LatestShortsRow) {
-	<table class="table">
+    <div class="overflow-x-auto w-full">
+	<table class="table table-pin-cols">
+        <thead>
+            <tr>
+                <th>Short</th>
+                <th>Created At</th>
+                <th></th>
+            </tr>
+        </thead>
 		<tbody>
 			for _, row := range shorts {
 				<tr data-short-id={ strconv.FormatInt(row.ID, 10) }>
-					<td><code class="kbd">{ row.Slug }</code></td>
+					<td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
 					<td>
 						<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
 							{ row.CreatedAt.Time.Format("2006-01-02") }
 						</time>
 					</td>
-					<td class="flex flex-row-reverse">
+					<th class="flex flex-row-reverse">
 						<a class="btn btn-outline" href={ templ.SafeURL("/ui/edit/" + strconv.FormatInt(row.ID, 10)) }>Edit</a>
-					</td>
+					</th>
 				</tr>
 			}
 		</tbody>
 	</table>
+    </div>
 }
 
 templ DashboardPage() {

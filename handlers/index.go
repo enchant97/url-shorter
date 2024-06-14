@@ -47,17 +47,23 @@ func (h *UiHandler) GetNewShort(c fuego.ContextNoBody) (fuego.Templ, error) {
 }
 
 type NewShortForm struct {
-	Slug      string `form:"slug" validate:"omitempty,alphanum"`
-	TargetUrl string `form:"targetUrl" validate:"required,http_url"`
+	SlugType   string `form:"slugType" validate:"required"`
+	CustomSlug string `form:"customSlug" validate:"omitempty,alphanum,max=128"`
+	TargetUrl  string `form:"targetUrl" validate:"required,http_url,max=8000"`
 }
 
 func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.Templ, error) {
 	b := c.MustBody()
-	if b.Slug == "" {
-		b.Slug = core.GenerateRandomSlug(6)
+	var slug string
+	if b.SlugType == "custom" && b.CustomSlug != "" {
+		slug = b.CustomSlug
+	} else if b.SlugType == "long" {
+		slug = core.GenerateRandomSlug(128)
+	} else {
+		slug = core.GenerateRandomSlug(6)
 	}
 	if _, err := h.dao.CreateShort(c.Context(), db.CreateShortParams{
-		Slug:      b.Slug,
+		Slug:      slug,
 		TargetUrl: b.TargetUrl,
 	}); err != nil {
 		var pgErr *pgconn.PgError
@@ -67,13 +73,13 @@ func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.
 		}
 		return nil, err
 	}
-	shortenedLink := fmt.Sprintf("%s/@/%s", h.appConfig.PublicUrl, b.Slug)
+	shortenedLink := fmt.Sprintf("%s/@/%s", h.appConfig.PublicUrl, slug)
 	return components.CreateShortForm(&shortenedLink), nil
 }
 
 type UpdateShortForm struct {
 	ID        int64  `form:"id" validate:"required"`
-	TargetUrl string `form:"targetUrl" validate:"required,http_url"`
+	TargetUrl string `form:"targetUrl" validate:"required,http_url,max=8000"`
 }
 
 func (h *UiHandler) GetUpdateShort(c *fuego.ContextNoBody) (any, error) {
