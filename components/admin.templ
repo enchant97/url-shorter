@@ -1,8 +1,8 @@
 package components
 
 import (
-	"strconv"
 	"github.com/enchant97/url-shorter/db"
+	"github.com/enchant97/url-shorter/core"
 	"time"
 )
 
@@ -112,7 +112,7 @@ templ EditShortForm(short db.Short) {
             hx-target="#edit-short-form"
             hx-target-error="#edit-short-form-response"
         >
-            <input type="hidden" name="id" value={ strconv.FormatInt(short.ID, 10) }/>
+            <input type="hidden" name="id" value={ core.Base10IntToString(short.ID) }/>
             <label class="form-control">
                 <span class="label-text">Target URL</span>
                 <input
@@ -149,7 +149,7 @@ templ LatestShorts(shorts []db.LatestShortsRow) {
         </thead>
 		<tbody>
 			for _, row := range shorts {
-				<tr data-short-id={ strconv.FormatInt(row.ID, 10) }>
+				<tr data-short-id={ core.Base10IntToString(row.ID) }>
 					<td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
 					<td>
 						<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
@@ -157,7 +157,7 @@ templ LatestShorts(shorts []db.LatestShortsRow) {
 						</time>
 					</td>
 					<th class="flex flex-row-reverse">
-						<a class="btn btn-outline" href={ templ.SafeURL("/ui/edit/" + strconv.FormatInt(row.ID, 10)) }>Edit</a>
+						<a class="btn btn-outline" href={ templ.SafeURL("/ui/edit/" + core.Base10IntToString(row.ID)) }>Edit</a>
 					</th>
 				</tr>
 			}
