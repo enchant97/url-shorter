@@ -42,6 +42,21 @@ func (h *UiHandler) GetDashboard(c fuego.ContextNoBody) (fuego.Templ, error) {
 	return components.DashboardPage(), nil
 }
 
+func (h *UiHandler) GetViewShortModal(c fuego.ContextNoBody) (any, error) {
+	if id, err := strconv.ParseInt(c.PathParam("id"), 10, 64); err != nil {
+		c.SetStatus(404)
+		return "404", nil
+	} else if short, err := h.dao.GetShortByID(c.Context(), id); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			c.SetStatus(404)
+			return "404", nil
+		}
+		return nil, err
+	} else {
+		return components.ViewShortModal(short), nil
+	}
+}
+
 func (h *UiHandler) GetNewShort(c fuego.ContextNoBody) (fuego.Templ, error) {
 	return components.CreateShortPage(), nil
 }

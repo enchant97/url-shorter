@@ -15,49 +15,49 @@ templ CreateShortForm(shortenedUrl *string) {
 			hx-target="#create-short-form"
 			hx-target-error="#create-short-form-response"
 		>
-            <script>
+			<script>
                 function shortTypeChange() {
                     let isChecked = document.querySelector('#create-short-form input[value=custom]').checked;
                     let customInput = document.querySelector('#create-short-form input[name=customSlug]');
                     customInput.disabled = !isChecked;
                 }
             </script>
-            <fieldset>
-                <legend>Short Type</legend>
-                <div>
-                    <label class="label cursor-pointer">
-                        <span class="label-text">Short UID</span>
-                        <input
-                            class="radio"
-                            type="radio"
-                            name="slugType"
-                            value="short"
-                            hx-on:change="shortTypeChange()"
-                            checked
-                        />
-                    </label>
-                    <label class="label cursor-pointer">
-                        <span class="label-text">Long UID</span>
-                        <input
-                            class="radio"
-                            type="radio"
-                            name="slugType"
-                            value="long"
-                            hx-on:change="shortTypeChange()"
-                        />
-                    </label>
-                    <label class="label cursor-pointer">
-                        <span class="label-text">Custom Name</span>
-                        <input
-                            class="radio"
-                            type="radio"
-                            name="slugType"
-                            value="custom"
-                            hx-on:change="shortTypeChange()"
-                        />
-                    </label>
-                </div>
-            </fieldset>
+			<fieldset>
+				<legend>Short Type</legend>
+				<div>
+					<label class="label cursor-pointer">
+						<span class="label-text">Short UID</span>
+						<input
+							class="radio"
+							type="radio"
+							name="slugType"
+							value="short"
+							hx-on:change="shortTypeChange()"
+							checked
+						/>
+					</label>
+					<label class="label cursor-pointer">
+						<span class="label-text">Long UID</span>
+						<input
+							class="radio"
+							type="radio"
+							name="slugType"
+							value="long"
+							hx-on:change="shortTypeChange()"
+						/>
+					</label>
+					<label class="label cursor-pointer">
+						<span class="label-text">Custom Name</span>
+						<input
+							class="radio"
+							type="radio"
+							name="slugType"
+							value="custom"
+							hx-on:change="shortTypeChange()"
+						/>
+					</label>
+				</div>
+			</fieldset>
 			<label class="form-control">
 				<span class="label-text">Custom Name</span>
 				<input
@@ -66,9 +66,9 @@ templ CreateShortForm(shortenedUrl *string) {
 					pattern="^[A-Za-z0-9]+$"
 					name="customSlug"
 					placeholder="e.g. favSite"
-                    maxlength="32"
-                    disabled
-                    required
+					maxlength="32"
+					disabled
+					required
 				/>
 			</label>
 			<label class="form-control">
@@ -78,7 +78,7 @@ templ CreateShortForm(shortenedUrl *string) {
 					type="url"
 					name="targetUrl"
 					placeholder="e.g. https://example.com"
-                    maxlength="8000"
+					maxlength="8000"
 					required
 				/>
 			</label>
@@ -104,31 +104,31 @@ templ CreateShortPage() {
 }
 
 templ EditShortForm(short db.Short) {
-    <div id="edit-short-form" hx-ext="response-targets">
-        <h1 class="text-2xl font-bold">Edit Short</h1>
-        <form
-            class="flex flex-col gap-2 p-2 max-w-md"
-            hx-post="/ui/_post_edit_short"
-            hx-target="#edit-short-form"
-            hx-target-error="#edit-short-form-response"
-        >
-            <input type="hidden" name="id" value={ core.Base10IntToString(short.ID) }/>
-            <label class="form-control">
-                <span class="label-text">Target URL</span>
-                <input
-                    class="input input-bordered"
-                    type="url"
-                    name="targetUrl"
-                    placeholder="https://example.com"
-                    value={ short.TargetUrl }
-                    maxlength="8000"
-                    required
-                />
-            </label>
-            <button class="btn btn-outline btn-primary" type="submit">Save</button>
-            <div id="edit-short-form-response"></div>
-        </form>
-    </div>
+	<div id="edit-short-form" hx-ext="response-targets">
+		<h1 class="text-2xl font-bold">Edit Short</h1>
+		<form
+			class="flex flex-col gap-2 p-2 max-w-md"
+			hx-post="/ui/_post_edit_short"
+			hx-target="#edit-short-form"
+			hx-target-error="#edit-short-form-response"
+		>
+			<input type="hidden" name="id" value={ core.Base10IntToString(short.ID) }/>
+			<label class="form-control">
+				<span class="label-text">Target URL</span>
+				<input
+					class="input input-bordered"
+					type="url"
+					name="targetUrl"
+					placeholder="https://example.com"
+					value={ short.TargetUrl }
+					maxlength="8000"
+					required
+				/>
+			</label>
+			<button class="btn btn-outline btn-primary" type="submit">Save</button>
+			<div id="edit-short-form-response"></div>
+		</form>
+	</div>
 }
 
 templ EditShortPage(short db.Short) {
@@ -138,32 +138,55 @@ templ EditShortPage(short db.Short) {
 }
 
 templ LatestShorts(shorts []db.LatestShortsRow) {
-    <div class="overflow-x-auto w-full">
-	<table class="table table-pin-cols">
-        <thead>
-            <tr>
-                <th>Short</th>
-                <th>Created At</th>
-                <th></th>
-            </tr>
-        </thead>
-		<tbody>
-			for _, row := range shorts {
-				<tr data-short-id={ core.Base10IntToString(row.ID) }>
-					<td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
-					<td>
-						<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
-							{ row.CreatedAt.Time.Format("2006-01-02") }
-						</time>
-					</td>
-					<th class="flex flex-row-reverse">
-						<a class="btn btn-outline" href={ templ.SafeURL("/ui/edit/" + core.Base10IntToString(row.ID)) }>Edit</a>
-					</th>
+	<div class="overflow-x-auto w-full">
+		<table class="table table-pin-cols">
+			<thead>
+				<tr>
+					<th>Short</th>
+					<th>Created At</th>
+					<th></th>
 				</tr>
-			}
-		</tbody>
-	</table>
-    </div>
+			</thead>
+			<tbody>
+				for _, row := range shorts {
+					<tr data-short-id={ core.Base10IntToString(row.ID) }>
+						<td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
+						<td>
+							<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
+								{ row.CreatedAt.Time.Format("2006-01-02") }
+							</time>
+						</td>
+						<th class="join w-full justify-end">
+							<button
+								class="join-item btn btn-outline"
+								type="button"
+								hx-get={ "/ui/_get_view_short_modal/" + core.Base10IntToString(row.ID) }
+								hx-trigger="click"
+								hx-target="body"
+								hx-swap="beforeend"
+							>
+								<span class="loading loading-spin htmx-indicator"></span>
+								View
+							</button>
+							<a
+								class="join-item btn btn-outline"
+								href={ templ.SafeURL("/ui/edit/" + core.Base10IntToString(row.ID)) }
+							>Edit</a>
+						</th>
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+}
+
+templ ViewShortModal(short db.Short) {
+	@ModalBase("view-short-modal", "View Short") {
+		<div class="flex flex-col gap-2 p-2 bg-base-200">
+			<span class="p-2 bg-base-100">Short Name: <code class="select-all">{ short.Slug }</code></span>
+			<span class="p-2 bg-base-100">Target URL: <code class="select-all">{ short.TargetUrl }</code></span>
+		</div>
+	}
 }
 
 templ DashboardPage() {

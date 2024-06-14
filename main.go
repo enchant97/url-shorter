@@ -40,6 +40,7 @@ func main() {
 	fuego.Get(ui, "/ui/edit/{id}", uiHandler.GetUpdateShort)
 	fuego.Post(ui, "/ui/_post_new_short", uiHandler.PostNewShort)
 	fuego.Get(ui, "/ui/_get_latest_shorts", uiHandler.GetLatestShorts)
+	fuego.Get(ui, "/ui/_get_view_short_modal/{id}", uiHandler.GetViewShortModal)
 	fuego.Post(ui, "/ui/_post_edit_short", uiHandler.PostUpdateShort)
 
 	s.Run()
