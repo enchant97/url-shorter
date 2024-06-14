@@ -8,6 +8,7 @@ require (
 	github.com/go-fuego/fuego v0.13.4
 	github.com/golang-migrate/migrate/v4 v4.17.1
 	github.com/jackc/pgx/v5 v5.6.0
+	github.com/jxskiss/base62 v1.1.0
 )
 
 require (
