@@ -15,13 +15,6 @@ templ CreateShortForm(shortenedUrl *string) {
 			hx-target="#create-short-form"
 			hx-target-error="#create-short-form-response"
 		>
-			<script>
-                function shortTypeChange() {
-                    let isChecked = document.querySelector('#create-short-form input[value=custom]').checked;
-                    let customInput = document.querySelector('#create-short-form input[name=customSlug]');
-                    customInput.disabled = !isChecked;
-                }
-            </script>
 			<fieldset>
 				<legend>Short Type</legend>
 				<div>
@@ -32,7 +25,7 @@ templ CreateShortForm(shortenedUrl *string) {
 							type="radio"
 							name="slugType"
 							value="short"
-							hx-on:change="shortTypeChange()"
+                            _="on change add @disabled to <#create-short-form input[name=customSlug]/>"
 							checked
 						/>
 					</label>
@@ -43,7 +36,7 @@ templ CreateShortForm(shortenedUrl *string) {
 							type="radio"
 							name="slugType"
 							value="long"
-							hx-on:change="shortTypeChange()"
+                            _="on change add @disabled to <#create-short-form input[name=customSlug]/>"
 						/>
 					</label>
 					<label class="label cursor-pointer">
@@ -53,7 +46,7 @@ templ CreateShortForm(shortenedUrl *string) {
 							type="radio"
 							name="slugType"
 							value="custom"
-							hx-on:change="shortTypeChange()"
+                            _="on change remove @disabled from <#create-short-form input[name=customSlug]/>"
 						/>
 					</label>
 				</div>
