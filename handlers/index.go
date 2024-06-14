@@ -48,7 +48,7 @@ func (h *UiHandler) GetNewShort(c fuego.ContextNoBody) (fuego.Templ, error) {
 
 type NewShortForm struct {
 	SlugType   string `form:"slugType" validate:"required"`
-	CustomSlug string `form:"customSlug" validate:"omitempty,alphanum,max=128"`
+	CustomSlug string `form:"customSlug" validate:"omitempty,alphanum,max=32"`
 	TargetUrl  string `form:"targetUrl" validate:"required,http_url,max=8000"`
 }
 
@@ -58,9 +58,9 @@ func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.
 	if b.SlugType == "custom" && b.CustomSlug != "" {
 		slug = b.CustomSlug
 	} else if b.SlugType == "long" {
-		slug = core.GenerateRandomSlug(128)
+		slug = core.GenerateRandomSlug(h.appConfig.UIDLongLength)
 	} else {
-		slug = core.GenerateRandomSlug(6)
+		slug = core.GenerateRandomSlug(h.appConfig.UIDShortLength)
 	}
 	if _, err := h.dao.CreateShort(c.Context(), db.CreateShortParams{
 		Slug:      slug,
