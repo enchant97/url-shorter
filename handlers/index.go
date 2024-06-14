@@ -53,7 +53,10 @@ type NewShortForm struct {
 }
 
 func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.Templ, error) {
-	b := c.MustBody()
+	b, err := c.Body()
+	if err != nil {
+		return nil, err
+	}
 	var slug string
 	if b.SlugType == "custom" && b.CustomSlug != "" {
 		slug = b.CustomSlug
@@ -98,7 +101,10 @@ func (h *UiHandler) GetUpdateShort(c *fuego.ContextNoBody) (any, error) {
 }
 
 func (h *UiHandler) PostUpdateShort(c *fuego.ContextWithBody[UpdateShortForm]) (fuego.Templ, error) {
-	b := c.MustBody()
+	b, err := c.Body()
+	if err != nil {
+		return nil, err
+	}
 	if short, err := h.dao.UpdateShortByID(c.Context(), db.UpdateShortByIDParams{ID: b.ID, TargetUrl: b.TargetUrl}); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			c.SetStatus(422)
