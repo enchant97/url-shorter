@@ -4,11 +4,13 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"strconv"
 
 	"github.com/enchant97/url-shorter/components"
 	"github.com/enchant97/url-shorter/core"
 	"github.com/enchant97/url-shorter/db"
 	"github.com/go-fuego/fuego"
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgconn"
 )
 
@@ -67,6 +69,39 @@ func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.
 	}
 	shortenedLink := fmt.Sprintf("%s/@/%s", h.appConfig.PublicUrl, b.Slug)
 	return components.CreateShortForm(&shortenedLink), nil
+}
+
+type UpdateShortForm struct {
+	ID        int64  `form:"id" validate:"required"`
+	TargetUrl string `form:"targetUrl" validate:"required,http_url"`
+}
+
+func (h *UiHandler) GetUpdateShort(c *fuego.ContextNoBody) (any, error) {
+	if id, err := strconv.ParseInt(c.PathParam("id"), 10, 64); err != nil {
+		c.SetStatus(404)
+		return "404", nil
+	} else if short, err := h.dao.GetShortByID(c.Context(), id); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			c.SetStatus(404)
+			return "404", nil
+		}
+		return nil, err
+	} else {
+		return components.EditShortPage(short), nil
+	}
+}
+
+func (h *UiHandler) PostUpdateShort(c *fuego.ContextWithBody[UpdateShortForm]) (fuego.Templ, error) {
+	b := c.MustBody()
+	if short, err := h.dao.UpdateShortByID(c.Context(), db.UpdateShortByIDParams{ID: b.ID, TargetUrl: b.TargetUrl}); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			c.SetStatus(422)
+			return components.FlashBox("short does not exist", components.FlashError), nil
+		}
+		return nil, err
+	} else {
+		return components.EditShortForm(short), nil
+	}
 }
 
 func (h *UiHandler) GetShortRedirect(c *fuego.ContextNoBody) (any, error) {

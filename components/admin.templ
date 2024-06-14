@@ -56,6 +56,39 @@ templ CreateShortPage() {
 	}
 }
 
+templ EditShortForm(short db.Short) {
+    <div id="edit-short-form" hx-ext="response-targets">
+        <h1 class="text-2xl font-bold">Edit Short</h1>
+        <form
+            class="flex flex-col gap-2 p-2 max-w-md"
+            hx-post="/ui/_post_edit_short"
+            hx-target="#edit-short-form"
+            hx-target-error="#edit-short-form-response"
+        >
+            <input type="hidden" name="id" value={ strconv.FormatInt(short.ID, 10) }/>
+            <label class="form-control">
+                <span class="label-text">Target URL</span>
+                <input
+                    class="input input-bordered"
+                    type="url"
+                    name="targetUrl"
+                    placeholder="https://example.com"
+                    value={ short.TargetUrl }
+                    required
+                />
+            </label>
+            <button class="btn btn-outline btn-primary" type="submit">Save</button>
+            <div id="edit-short-form-response"></div>
+        </form>
+    </div>
+}
+
+templ EditShortPage(short db.Short) {
+	@Base() {
+		@EditShortForm(short)
+	}
+}
+
 templ LatestShorts(shorts []db.LatestShortsRow) {
 	<table class="table">
 		<tbody>
@@ -66,6 +99,9 @@ templ LatestShorts(shorts []db.LatestShortsRow) {
 						<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
 							{ row.CreatedAt.Time.Format("2006-01-02") }
 						</time>
+					</td>
+					<td class="flex flex-row-reverse">
+						<a class="btn btn-outline" href={ templ.SafeURL("/ui/edit/" + strconv.FormatInt(row.ID, 10)) }>Edit</a>
 					</td>
 				</tr>
 			}
