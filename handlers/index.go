@@ -90,8 +90,8 @@ func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.
 		}
 		return nil, err
 	} else {
+		c.SetHeader("Hx-Trigger", "newShort")
 		c.SetStatus(http.StatusCreated)
-        c.SetHeader("TX-Trigger", "newShort")
 		return components.CreateShortModalCreated(short, h.appConfig.PublicUrl), nil
 	}
 }
@@ -101,7 +101,7 @@ type UpdateShortForm struct {
 	TargetUrl string `form:"targetUrl" validate:"required,http_url,max=8000"`
 }
 
-func (h *UiHandler) GetUpdateShort(c *fuego.ContextNoBody) (any, error) {
+func (h *UiHandler) GetUpdateShortModal(c *fuego.ContextNoBody) (any, error) {
 	if id, err := strconv.ParseInt(c.PathParam("id"), 10, 64); err != nil {
 		c.SetStatus(404)
 		return "404", nil
@@ -112,7 +112,7 @@ func (h *UiHandler) GetUpdateShort(c *fuego.ContextNoBody) (any, error) {
 		}
 		return nil, err
 	} else {
-		return components.EditShortPage(short), nil
+		return components.EditShortModal(short), nil
 	}
 }
 
@@ -121,14 +121,16 @@ func (h *UiHandler) PostUpdateShort(c *fuego.ContextWithBody[UpdateShortForm]) (
 	if err != nil {
 		return nil, err
 	}
-	if short, err := h.dao.UpdateShortByID(c.Context(), db.UpdateShortByIDParams{ID: b.ID, TargetUrl: b.TargetUrl}); err != nil {
+	if _, err := h.dao.UpdateShortByID(c.Context(), db.UpdateShortByIDParams{ID: b.ID, TargetUrl: b.TargetUrl}); err != nil {
 		if errors.Is(err, pgx.ErrNoRows) {
 			c.SetStatus(422)
 			return components.FlashBox("short does not exist", components.FlashError), nil
 		}
 		return nil, err
 	} else {
-		return components.EditShortForm(short), nil
+		c.SetHeader("Hx-Trigger", "editShort")
+		c.SetStatus(http.StatusNoContent)
+		return nil, nil
 	}
 }
 
