@@ -36,10 +36,10 @@ func main() {
 	fuego.Get(ui, "/@/{slug}", uiHandler.GetShortRedirect)
 	fuego.Get(ui, "/", uiHandler.GetIndex)
 	fuego.Get(ui, "/ui/", uiHandler.GetDashboard)
-	fuego.Get(ui, "/ui/new", uiHandler.GetNewShort)
 	fuego.Get(ui, "/ui/edit/{id}", uiHandler.GetUpdateShort)
 	fuego.Post(ui, "/ui/_post_new_short", uiHandler.PostNewShort)
 	fuego.Get(ui, "/ui/_get_latest_shorts", uiHandler.GetLatestShorts)
+	fuego.Get(ui, "/ui/_get_create_short_modal", uiHandler.GetNewShortModal)
 	fuego.Get(ui, "/ui/_get_view_short_modal/{id}", uiHandler.GetViewShortModal)
 	fuego.Post(ui, "/ui/_post_edit_short", uiHandler.PostUpdateShort)
 

@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strconv"
 
@@ -57,8 +56,8 @@ func (h *UiHandler) GetViewShortModal(c fuego.ContextNoBody) (any, error) {
 	}
 }
 
-func (h *UiHandler) GetNewShort(c fuego.ContextNoBody) (fuego.Templ, error) {
-	return components.CreateShortPage(), nil
+func (h *UiHandler) GetNewShortModal(c fuego.ContextNoBody) (fuego.Templ, error) {
+	return components.CreateShortModal(), nil
 }
 
 type NewShortForm struct {
@@ -80,7 +79,7 @@ func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.
 	} else {
 		slug = core.GenerateRandomSlug(h.appConfig.UIDShortLength)
 	}
-	if _, err := h.dao.CreateShort(c.Context(), db.CreateShortParams{
+	if short, err := h.dao.CreateShort(c.Context(), db.CreateShortParams{
 		Slug:      slug,
 		TargetUrl: b.TargetUrl,
 	}); err != nil {
@@ -90,9 +89,11 @@ func (h *UiHandler) PostNewShort(c *fuego.ContextWithBody[NewShortForm]) (fuego.
 			return components.FlashBox("shortened name already exists", components.FlashError), nil
 		}
 		return nil, err
+	} else {
+		c.SetStatus(http.StatusCreated)
+        c.SetHeader("TX-Trigger", "newShort")
+		return components.CreateShortModalCreated(short, h.appConfig.PublicUrl), nil
 	}
-	shortenedLink := fmt.Sprintf("%s/@/%s", h.appConfig.PublicUrl, slug)
-	return components.CreateShortForm(&shortenedLink), nil
 }
 
 type UpdateShortForm struct {

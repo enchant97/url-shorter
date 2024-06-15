@@ -4,96 +4,105 @@ import (
 	"github.com/enchant97/url-shorter/db"
 	"github.com/enchant97/url-shorter/core"
 	"time"
+	"fmt"
 )
 
-templ CreateShortForm(shortenedUrl *string) {
-	<div id="create-short-form" hx-ext="response-targets">
-		<h1 class="text-2xl font-bold">New Short</h1>
-		<form
-			class="flex flex-col gap-2 p-2 max-w-md"
-			hx-post="/ui/_post_new_short"
-			hx-target="#create-short-form"
-			hx-target-error="#create-short-form-response"
-		>
-			<fieldset>
-				<legend>Short Type</legend>
-				<div>
-					<label class="label cursor-pointer">
-						<span class="label-text">Short UID</span>
-						<input
-							class="radio"
-							type="radio"
-							name="slugType"
-							value="short"
-                            _="on change add @disabled to <#create-short-form input[name=customSlug]/>"
-							checked
-						/>
-					</label>
-					<label class="label cursor-pointer">
-						<span class="label-text">Long UID</span>
-						<input
-							class="radio"
-							type="radio"
-							name="slugType"
-							value="long"
-                            _="on change add @disabled to <#create-short-form input[name=customSlug]/>"
-						/>
-					</label>
-					<label class="label cursor-pointer">
-						<span class="label-text">Custom Name</span>
-						<input
-							class="radio"
-							type="radio"
-							name="slugType"
-							value="custom"
-                            _="on change remove @disabled from <#create-short-form input[name=customSlug]/>"
-						/>
-					</label>
-				</div>
-			</fieldset>
-			<label class="form-control">
-				<span class="label-text">Custom Name</span>
-				<input
-					class="input input-bordered"
-					type="text"
-					pattern="^[A-Za-z0-9]+$"
-					name="customSlug"
-					placeholder="e.g. favSite"
-					maxlength="32"
-					disabled
-					required
-				/>
-			</label>
-			<label class="form-control">
-				<span class="label-text">Target URL</span>
-				<input
-					class="input input-bordered"
-					type="url"
-					name="targetUrl"
-					placeholder="e.g. https://example.com"
-					maxlength="8000"
-					required
-				/>
-			</label>
-			<button class="btn" type="submit">Submit</button>
-			<div id="create-short-form-response">
-				if shortenedUrl != nil {
-					@FlashBox("new short created", FlashMessage) {
-						<div>
-							<span>Created Short:</span>
-							<code class="select-all kbd">{ *shortenedUrl }</code>
-						</div>
-					}
-				}
-			</div>
-		</form>
-	</div>
+templ CreateShortModal() {
+	@ModalBase("create-short-modal", "New Short") {
+		<div hx-ext="response-targets">
+			<form
+                id="create-short-form"
+				class="flex flex-col gap-2 p-2 max-w-md"
+				hx-post="/ui/_post_new_short"
+				hx-target="#create-short-form"
+				hx-target-error="#create-short-form-response"
+				hx-target-201="#create-short-form-response"
+			>
+				<fieldset>
+					<legend>Short Type</legend>
+					<div>
+						<label class="label cursor-pointer">
+							<span class="label-text">Short UID</span>
+							<input
+								class="radio"
+								type="radio"
+								name="slugType"
+								value="short"
+								_="on change add @disabled to <#create-short-form input[name=customSlug]/>"
+								checked
+							/>
+						</label>
+						<label class="label cursor-pointer">
+							<span class="label-text">Long UID</span>
+							<input
+								class="radio"
+								type="radio"
+								name="slugType"
+								value="long"
+								_="on change add @disabled to <#create-short-form input[name=customSlug]/>"
+							/>
+						</label>
+						<label class="label cursor-pointer">
+							<span class="label-text">Custom Name</span>
+							<input
+								class="radio"
+								type="radio"
+								name="slugType"
+								value="custom"
+								_="on change remove @disabled from <#create-short-form input[name=customSlug]/>"
+							/>
+						</label>
+					</div>
+				</fieldset>
+				<label class="form-control">
+					<span class="label-text">Custom Name</span>
+					<input
+						class="input input-bordered"
+						type="text"
+						pattern="^[A-Za-z0-9]+$"
+						name="customSlug"
+						placeholder="e.g. favSite"
+						maxlength="32"
+						disabled
+						required
+					/>
+				</label>
+				<label class="form-control">
+					<span class="label-text">Target URL</span>
+					<input
+						class="input input-bordered"
+						type="url"
+						name="targetUrl"
+						placeholder="e.g. https://example.com"
+						maxlength="8000"
+						required
+					/>
+				</label>
+				<button class="btn" type="submit">Submit</button>
+			</form>
+			<div id="create-short-form-response"></div>
+		</div>
+	}
 }
 
-templ CreateShortPage() {
-	@Base() {
-		@CreateShortForm(nil)
-	}
+templ CreateShortModalCreated(short db.Short, publicURL string) {
+    <h2 class="font-bold text-lg">Created Short</h2>
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Short</th>
+                <td>{ short.Slug }</td>
+            </tr>
+            <tr>
+                <th>Target URL</th>
+                <td><a href={ templ.SafeURL(short.TargetUrl) }>{ short.TargetUrl }</a></td>
+            </tr>
+            <tr>
+                <th>Share Link</th>
+                <td><code class="kbd select-all">{ fmt.Sprintf("%s/@/%s", publicURL, short.Slug) }</code></td>
+            </tr>
+        </tbody>
+    </table>
 }
 
 templ EditShortForm(short db.Short) {
@@ -131,31 +140,31 @@ templ EditShortPage(short db.Short) {
 }
 
 templ ShortsRow(row db.Short) {
-    <tr data-short-id={ core.Base10IntToString(row.ID) }>
-        <td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
-        <td>
-            <time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
-                { row.CreatedAt.Time.Format("2006-01-02") }
-            </time>
-        </td>
-        <th class="join w-full justify-end">
-            <button
-                class="join-item btn btn-outline"
-                type="button"
-                hx-get={ "/ui/_get_view_short_modal/" + core.Base10IntToString(row.ID) }
-                hx-trigger="click"
-                hx-target="body"
-                hx-swap="beforeend"
-            >
-                <span class="loading loading-spin htmx-indicator"></span>
-                View
-            </button>
-            <a
-                class="join-item btn btn-outline"
-                href={ templ.SafeURL("/ui/edit/" + core.Base10IntToString(row.ID)) }
-            >Edit</a>
-        </th>
-    </tr>
+	<tr data-short-id={ core.Base10IntToString(row.ID) }>
+		<td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
+		<td>
+			<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>
+				{ row.CreatedAt.Time.Format("2006-01-02") }
+			</time>
+		</td>
+		<th class="join w-full justify-end">
+			<button
+				class="join-item btn btn-outline"
+				type="button"
+				hx-get={ "/ui/_get_view_short_modal/" + core.Base10IntToString(row.ID) }
+				hx-trigger="click"
+				hx-target="body"
+				hx-swap="beforeend"
+			>
+				<span class="loading loading-spin htmx-indicator"></span>
+				View
+			</button>
+			<a
+				class="join-item btn btn-outline"
+				href={ templ.SafeURL("/ui/edit/" + core.Base10IntToString(row.ID)) }
+			>Edit</a>
+		</th>
+	</tr>
 }
 
 templ Shorts(shorts []db.Short) {
@@ -170,7 +179,7 @@ templ Shorts(shorts []db.Short) {
 			</thead>
 			<tbody>
 				for _, row := range shorts {
-                    @ShortsRow(row)
+					@ShortsRow(row)
 				}
 			</tbody>
 		</table>
@@ -190,7 +199,17 @@ templ DashboardPage() {
 	@Base() {
 		<div>
 			<h1 class="text-2xl font-bold">Dashboard</h1>
-			<a class="btn" href="/ui/new">New Short</a>
+			<button
+				class="join-item btn btn-outline"
+				type="button"
+				hx-get={ "/ui/_get_create_short_modal" }
+				hx-trigger="click"
+				hx-target="body"
+				hx-swap="beforeend"
+			>
+				<span class="loading loading-spin htmx-indicator"></span>
+				New Short
+			</button>
 			<div>
 				<h2 class="text-xl font-bold">Latest Shorts</h2>
 				<div hx-get="/ui/_get_latest_shorts" hx-trigger="revealed">

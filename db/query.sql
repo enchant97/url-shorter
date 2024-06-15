@@ -4,7 +4,7 @@ INSERT INTO shorts (
 ) VALUES (
     $1, $2
 )
-RETURNING id;
+RETURNING *;
 
 -- name: GetShortTargetBySlug :one
 SELECT target_url FROM shorts
