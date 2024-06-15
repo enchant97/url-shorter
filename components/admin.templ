@@ -85,8 +85,7 @@ templ CreateShortModal() {
 	}
 }
 
-templ CreateShortModalCreated(short db.Short, publicURL string) {
-	<h2 class="font-bold text-lg">Created Short</h2>
+templ Short(short db.Short, publicURL string) {
 	<table class="table">
 		<tbody>
 			<tr>
@@ -95,7 +94,7 @@ templ CreateShortModalCreated(short db.Short, publicURL string) {
 			</tr>
 			<tr>
 				<th>Target URL</th>
-				<td><a href={ templ.SafeURL(short.TargetUrl) }>{ short.TargetUrl }</a></td>
+				<td><a class="link" href={ templ.SafeURL(short.TargetUrl) }>{ short.TargetUrl }</a></td>
 			</tr>
 			<tr>
 				<th>Share Link</th>
@@ -103,6 +102,11 @@ templ CreateShortModalCreated(short db.Short, publicURL string) {
 			</tr>
 		</tbody>
 	</table>
+}
+
+templ CreateShortModalCreated(short db.Short, publicURL string) {
+	<h2 class="font-bold text-lg">Created Short</h2>
+	@Short(short, publicURL)
 }
 
 templ EditShortModal(short db.Short) {
@@ -195,12 +199,9 @@ templ Shorts(shorts []db.Short) {
 	</div>
 }
 
-templ ViewShortModal(short db.Short) {
+templ ViewShortModal(short db.Short, publicURL string) {
 	@ModalBase("view-short-modal", "View Short") {
-		<div class="flex flex-col gap-2 p-2 bg-base-200">
-			<span class="p-2 bg-base-100">Short Name: <code class="select-all">{ short.Slug }</code></span>
-			<span class="p-2 bg-base-100">Target URL: <code class="select-all">{ short.TargetUrl }</code></span>
-		</div>
+		@Short(short, publicURL)
 	}
 }
 

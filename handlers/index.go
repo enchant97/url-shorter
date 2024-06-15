@@ -52,7 +52,7 @@ func (h *UiHandler) GetViewShortModal(c fuego.ContextNoBody) (any, error) {
 		}
 		return nil, err
 	} else {
-		return components.ViewShortModal(short), nil
+		return components.ViewShortModal(short, h.appConfig.PublicUrl), nil
 	}
 }
 
