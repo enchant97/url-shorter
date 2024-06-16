@@ -232,7 +232,7 @@ templ DashboardPage() {
 			</button>
 			<div>
 				<h2 class="text-xl font-bold">Latest Shorts</h2>
-				<div hx-get="/ui/_get_latest_shorts" hx-trigger="revealed">
+				<div hx-get="/ui/_get_latest_shorts" hx-trigger="revealed, newShort from:body, editShort from:body">
 					<span class="htmx-indicator loading loading-ring"></span>
 				</div>
 			</div>
