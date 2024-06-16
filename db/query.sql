@@ -17,6 +17,7 @@ WHERE id = $1 AND deleted_at IS null;
 -- name: LatestShorts :many
 SELECT * FROM shorts
 WHERE deleted_at IS null
+ORDER BY updated_at DESC, created_at DESC
 LIMIT $1;
 
 -- name: UpdateShortByID :one
