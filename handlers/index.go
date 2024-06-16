@@ -134,6 +134,23 @@ func (h *UiHandler) PostUpdateShort(c *fuego.ContextWithBody[UpdateShortForm]) (
 	}
 }
 
+func (h *UiHandler) DeleteShortByID(c *fuego.ContextNoBody) (fuego.Templ, error) {
+	if id, err := strconv.ParseInt(c.PathParam("id"), 10, 64); err != nil {
+		c.SetStatus(404)
+		return components.FlashBox("short not found", components.FlashError), nil
+	} else if err := h.dao.DeleteShortByID(c.Context(), id); err != nil {
+		if errors.Is(err, pgx.ErrNoRows) {
+			c.SetStatus(404)
+			return components.FlashBox("short not found", components.FlashError), nil
+		}
+		return nil, err
+	} else {
+		c.SetHeader("Hx-Trigger", "deleteShort")
+		c.SetStatus(http.StatusNoContent)
+		return nil, nil
+	}
+}
+
 func (h *UiHandler) GetShortRedirect(c *fuego.ContextNoBody) (any, error) {
 	slug := c.PathParam("slug")
 	targetUrl, err := h.dao.GetShortTargetBySlug(c.Context(), slug)

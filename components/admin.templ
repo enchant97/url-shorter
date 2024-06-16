@@ -118,7 +118,7 @@ templ EditShortModal(short db.Short) {
 				hx-post="/ui/_post_edit_short"
 				hx-target="#edit-short-form"
 				hx-target-error="#edit-short-form-response"
-				_="on editShort remove #edit-short-modal"
+				_={ fmt.Sprintf("on editShort remove #edit-short-modal on deleteShort remove #edit-short-modal then send deleteShort%d to body", short.ID) }
 			>
 				<input type="hidden" name="id" value={ core.Base10IntToString(short.ID) }/>
 				<label class="form-control">
@@ -137,6 +137,16 @@ templ EditShortModal(short db.Short) {
 					<span class="loading loading-spin htmx-indicator"></span>
 					Save
 				</button>
+				<button
+					class="btn btn-outline btn-error"
+					type="button"
+					hx-delete={ fmt.Sprintf("/ui/_delete_short/%d",
+            short.ID) }
+					hx-confirm="Are you sure you want to delete this?"
+				>
+					<span class="loading loading-spin htmx-indicator"></span>
+					Delete
+				</button>
 				<div id="edit-short-form-response"></div>
 			</form>
 		</div>
@@ -144,7 +154,7 @@ templ EditShortModal(short db.Short) {
 }
 
 templ ShortsRow(row db.Short) {
-	<tr data-short-id={ core.Base10IntToString(row.ID) }>
+	<tr data-short-id={ core.Base10IntToString(row.ID) } _={ fmt.Sprintf("on deleteShort%d from body remove me", row.ID) }>
 		<td class="overflow-x-auto max-w-[50vw]"><code class="kbd">{ row.Slug }</code></td>
 		<td>
 			<time datetime={ row.CreatedAt.Time.UTC().Format(time.RFC3339) }>

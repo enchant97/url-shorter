@@ -42,6 +42,7 @@ func main() {
 	fuego.Get(ui, "/ui/_get_view_short_modal/{id}", uiHandler.GetViewShortModal)
 	fuego.Get(ui, "/ui/_get_edit_short_modal/{id}", uiHandler.GetUpdateShortModal)
 	fuego.Post(ui, "/ui/_post_edit_short", uiHandler.PostUpdateShort)
+	fuego.Delete(ui, "/ui/_delete_short/{id}", uiHandler.DeleteShortByID)
 
 	s.Run()
 }

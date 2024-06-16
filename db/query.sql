@@ -25,3 +25,8 @@ SET updated_at = default,
     target_url = $2
 WHERE id = $1 AND deleted_at IS null
 RETURNING *;
+
+-- name: DeleteShortByID :exec
+UPDATE shorts
+SET deleted_at = now()
+WHERE id = $1 AND deleted_at IS null;
